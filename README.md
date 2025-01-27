@@ -11,8 +11,8 @@ Collection of my custom Ghidra scripts.
 UnorderedCallGraphGenerator.java> Running...
 UnorderedCallGraphGenerator.java> 
 mw_heap_alloc_w @ 10001390
- HeapAlloc @ EXTERNAL:0000005b
- GetProcessHeap @ EXTERNAL:00000114
+  HeapAlloc @ EXTERNAL:0000005b
+  GetProcessHeap @ EXTERNAL:00000114
 
 UnorderedCallGraphGenerator.java> Finished!
 ```
