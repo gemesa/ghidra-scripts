@@ -5,7 +5,23 @@ Collection of my custom Ghidra scripts.
 
 <details>
 
-<summary><code>UnorderedCallGraphGenerator.log</code></summary>
+<summary><code>UnorderedCallGraphGenerator.log</code>(current function)</summary>
+
+```
+UnorderedCallGraphGenerator.java> Running...
+UnorderedCallGraphGenerator.java> 
+mw_heap_alloc_w @ 10001390
+ HeapAlloc @ EXTERNAL:0000005b
+ GetProcessHeap @ EXTERNAL:00000114
+
+UnorderedCallGraphGenerator.java> Finished!
+```
+
+</details>
+
+<details>
+
+<summary><code>UnorderedCallGraphGenerator.log</code>(whole program)</summary>
 
 ```
 UnorderedCallGraphGenerator.java> Running...

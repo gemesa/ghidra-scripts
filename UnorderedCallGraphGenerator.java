@@ -1,5 +1,5 @@
 
-//Generates an unordered text-based call graph for the current program
+//Generates an unordered text-based call graph for the current program or function
 //@category Functions
 //@author gemesa
 import ghidra.app.script.GhidraScript;
@@ -12,9 +12,27 @@ import java.util.*;
 public class UnorderedCallGraphGenerator extends GhidraScript {
 	private Set<String> visited = new HashSet<>();
 	private StringBuilder graph = new StringBuilder();
+	private boolean analyzeWholeProgram = false;
 
 	@Override
 	public void run() throws Exception {
+		String choice = askChoice("Call graph analysis", "Select analysis scope",
+			Arrays.asList("Current function", "Whole program"),
+			"Current function");
+
+		analyzeWholeProgram = choice.equals("Whole program");
+
+		if (analyzeWholeProgram) {
+			generateProgramCallGraph();
+		}
+		else {
+			generateCurrentFunctionCallGraph();
+		}
+
+		println("\n" + graph.toString());
+	}
+
+	private void generateProgramCallGraph() throws Exception {
 		FunctionManager functionManager = currentProgram.getFunctionManager();
 		Iterator<Function> functions = functionManager.getFunctions(true);
 
@@ -24,8 +42,16 @@ public class UnorderedCallGraphGenerator extends GhidraScript {
 				printCallGraph(func, 0);
 			}
 		}
+	}
 
-		println("\n" + graph.toString());
+	private void generateCurrentFunctionCallGraph() throws Exception {
+		Function currentFunction = getFunctionContaining(currentAddress);
+		if (currentFunction == null) {
+			println("No function selected!");
+			return;
+		}
+
+		printCallGraph(currentFunction, 0);
 	}
 
 	private void printCallGraph(Function function, int depth) {
