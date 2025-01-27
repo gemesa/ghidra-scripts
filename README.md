@@ -235,7 +235,23 @@ UnorderedCallGraphGenerator.java> Finished!
 
 <details>
 
-<summary><code>OrderedCallGraphGenerator.log</code></summary>
+<summary><code>OrderedCallGraphGenerator.log</code>(current function)</summary>
+
+```
+OrderedCallGraphGenerator.java> Running...
+OrderedCallGraphGenerator.java> 
+mw_heap_alloc_w @ 10001390
+  GetProcessHeap @ EXTERNAL:00000114
+  HeapAlloc @ EXTERNAL:0000005b
+
+OrderedCallGraphGenerator.java> Finished!
+```
+
+</details>
+
+<details>
+
+<summary><code>OrderedCallGraphGenerator.log</code>(whole program)</summary>
 
 ```
 OrderedCallGraphGenerator.java> Running...
