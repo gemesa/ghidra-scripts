@@ -8,7 +8,7 @@ import ghidra.program.model.address.Address;
 import ghidra.program.model.symbol.*;
 import java.util.*;
 
-public class OrderedCallGraphGenerator2 extends GhidraScript {
+public class OrderedCallGraphGenerator extends GhidraScript {
 	private Set<String> visited = new HashSet<>();
 	private StringBuilder graph = new StringBuilder();
 	private boolean analyzeWholeProgram = false;
