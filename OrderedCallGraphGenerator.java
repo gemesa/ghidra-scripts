@@ -91,13 +91,10 @@ public class OrderedCallGraphGenerator extends GhidraScript {
 
 				Reference[] refs = instr.getReferencesFrom();
 				for (Reference ref : refs) {
-					RefType refType = ref.getReferenceType();
-					if (refType.isCall() || refType.isData() || refType.isFlow()) {
-						Function calledFunc = getFunctionAt(ref.getToAddress());
-						if (calledFunc != null && !orderedFunctions.contains(calledFunc)) {
-							orderedFunctions.add(calledFunc);
-							printOrderedCallGraph(calledFunc, depth + 1);
-						}
+					Function calledFunc = getFunctionAt(ref.getToAddress());
+					if (calledFunc != null && !orderedFunctions.contains(calledFunc)) {
+						orderedFunctions.add(calledFunc);
+						printOrderedCallGraph(calledFunc, depth + 1);
 					}
 				}
 			}
