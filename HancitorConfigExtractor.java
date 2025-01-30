@@ -1,4 +1,4 @@
-//Extracts Hancitor config
+//Extracts Hancitor config by finding specific instruction patterns
 //@author gemesa
 
 import java.nio.charset.StandardCharsets;
