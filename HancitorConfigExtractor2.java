@@ -39,14 +39,14 @@ public class HancitorConfigExtractor2 extends GhidraScript {
 		memory.getBytes(dataAddress, encryptedData);
 		memory.getBytes(keyAddress, keyData);
 
-		println("key data: " + new BigInteger(1, keyData).toString(16));
+		println("key data: 0x" + new BigInteger(1, keyData).toString(16));
 
 		MessageDigest sha1 = MessageDigest.getInstance("SHA1");
 		byte[] keyHash = sha1.digest(keyData);
 
 		byte[] derivedKey = Arrays.copyOf(keyHash, 5);
 
-		println("derived key: " + new BigInteger(1, derivedKey).toString(16));
+		println("derived key: 0x" + new BigInteger(1, derivedKey).toString(16));
 
 		SecretKeySpec secretKey = new SecretKeySpec(derivedKey, "RC4");
 		Cipher cipher = Cipher.getInstance("RC4");

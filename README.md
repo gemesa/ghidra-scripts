@@ -11,8 +11,8 @@ Collection of my custom Ghidra scripts.
 HancitorConfigExtractor.java> Running...
 HancitorConfigExtractor.java> key address: 0x10005010
 HancitorConfigExtractor.java> data address: 0x10005018
-HancitorConfigExtractor.java> key data: f0da08fe225d0a8f
-HancitorConfigExtractor.java> derived key: 67f6c6259f
+HancitorConfigExtractor.java> key data: 0xf0da08fe225d0a8f
+HancitorConfigExtractor.java> derived key: 0x67f6c6259f
 HancitorConfigExtractor.java> decrypted config: 2508_bqplfhttp://intakinger.com/8/forum.php|http://idgentexpliet.ru/8/forum.php|http://declassivan.ru/8/forum.php|
 HancitorConfigExtractor.java> Finished!
 ```
@@ -29,8 +29,8 @@ HancitorConfigExtractor.java> Finished!
 HancitorConfigExtractor2.java> Running...
 HancitorConfigExtractor2.java> key address: 0x10005010
 HancitorConfigExtractor2.java> data address: 0x10005018
-HancitorConfigExtractor2.java> key data: f0da08fe225d0a8f
-HancitorConfigExtractor2.java> derived key: 67f6c6259f
+HancitorConfigExtractor2.java> key data: 0xf0da08fe225d0a8f
+HancitorConfigExtractor2.java> derived key: 0x67f6c6259f
 HancitorConfigExtractor2.java> decrypted config: 2508_bqplfhttp://intakinger.com/8/forum.php|http://idgentexpliet.ru/8/forum.php|http://declassivan.ru/8/forum.php|
 HancitorConfigExtractor2.java> Finished!
 ```
