@@ -19,6 +19,24 @@ HancitorConfigExtractor.java> Finished!
 
 </details>
 
+## `HancitorConfigExtractor2.java`
+
+<details>
+
+<summary><code>HancitorConfigExtractor2.log</code></summary>
+
+```
+HancitorConfigExtractor2.java> Running...
+HancitorConfigExtractor2.java> key address: 0x10005010
+HancitorConfigExtractor2.java> data address: 0x10005018
+HancitorConfigExtractor2.java> key data: F0DA08FE225D0A8F
+HancitorConfigExtractor2.java> derived key: 67F6C6259F
+HancitorConfigExtractor2.java> decrypted config: 2508_bqplfhttp://intakinger.com/8/forum.php|http://idgentexpliet.ru/8/forum.php|http://declassivan.ru/8/forum.php|
+HancitorConfigExtractor2.java> Finished!
+```
+
+</details>
+
 ## `UnorderedCallGraphGenerator.java`
 
 <details>
