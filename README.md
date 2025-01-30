@@ -1,6 +1,24 @@
 # ghidra-scripts
 Collection of my custom Ghidra scripts.
 
+## `HancitorConfigExtractor.java`
+
+<details>
+
+<summary><code>HancitorConfigExtractor.log</code></summary>
+
+```
+HancitorConfigExtractor.java> Running...
+HancitorConfigExtractor.java> key address: 0x10005010
+HancitorConfigExtractor.java> data address: 0x10005018
+HancitorConfigExtractor.java> key data: F0DA08FE225D0A8F
+HancitorConfigExtractor.java> derived key: 67F6C6259F
+HancitorConfigExtractor.java> decrypted config: 2508_bqplfhttp://intakinger.com/8/forum.php|http://idgentexpliet.ru/8/forum.php|http://declassivan.ru/8/forum.php|
+HancitorConfigExtractor.java> Finished!
+```
+
+</details>
+
 ## `UnorderedCallGraphGenerator.java`
 
 <details>
