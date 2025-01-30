@@ -1,6 +1,7 @@
 //Extracts Hancitor config from the .data section
 //@author gemesa
 
+import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.util.Arrays;
@@ -38,14 +39,14 @@ public class HancitorConfigExtractor2 extends GhidraScript {
 		memory.getBytes(dataAddress, encryptedData);
 		memory.getBytes(keyAddress, keyData);
 
-		println("key data: " + bytesToHex(keyData));
+		println("key data: " + new BigInteger(1, keyData).toString(16));
 
 		MessageDigest sha1 = MessageDigest.getInstance("SHA1");
 		byte[] keyHash = sha1.digest(keyData);
 
 		byte[] derivedKey = Arrays.copyOf(keyHash, 5);
 
-		println("derived key: " + bytesToHex(derivedKey));
+		println("derived key: " + new BigInteger(1, derivedKey).toString(16));
 
 		SecretKeySpec secretKey = new SecretKeySpec(derivedKey, "RC4");
 		Cipher cipher = Cipher.getInstance("RC4");
@@ -56,13 +57,5 @@ public class HancitorConfigExtractor2 extends GhidraScript {
 		String decryptedString =
 			new String(decryptedData, StandardCharsets.UTF_8).replace("\0", "");
 		println("decrypted config: " + decryptedString);
-	}
-
-	private String bytesToHex(byte[] bytes) {
-		StringBuilder sb = new StringBuilder();
-		for (byte b : bytes) {
-			sb.append(String.format("%02X", b));
-		}
-		return sb.toString();
 	}
 }
