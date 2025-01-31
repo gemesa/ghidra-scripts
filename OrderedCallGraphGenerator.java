@@ -64,8 +64,14 @@ public class OrderedCallGraphGenerator extends GhidraScript {
 			graph.append("  ".repeat(depth))
 					.append(funcName)
 					.append(" @ ")
-					.append(address)
-					.append(" [already visited!]\n");
+					.append(address);
+			if (!function.isExternal()) {
+				graph.append(" [already visited!]\n");
+			}
+			else {
+				graph.append("\n");
+			}
+
 			return;
 		}
 
