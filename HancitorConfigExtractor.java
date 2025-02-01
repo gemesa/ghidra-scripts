@@ -134,7 +134,7 @@ public class HancitorConfigExtractor extends GhidraScript {
 		byte[] decryptedData = cipher.doFinal(encryptedData);
 
 		String decryptedString =
-			new String(decryptedData, StandardCharsets.UTF_8).replace("\0", "");
+			new String(decryptedData, StandardCharsets.UTF_8).replace("\0", ".");
 		println("decrypted config: " + decryptedString);
 	}
 }
