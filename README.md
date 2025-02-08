@@ -528,3 +528,5 @@ OrderedCallGraphGenerator.java> Finished!
 
 ```
 </details>
+
+Alternatively, you can use the following action: `Function Call Trees` → `Outgoing Calls` → `Copy Formatted`. For more information, see https://github.com/NationalSecurityAgency/ghidra/issues/7417.
