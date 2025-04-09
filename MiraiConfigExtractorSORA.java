@@ -33,160 +33,82 @@ public class MiraiConfigExtractorSORA extends GhidraScript {
     // to make sure our decryption algorithm works properly,
     // and some of the data may have been encrypted with just a different key (e.g. 0xdeadbeef).
     //private static final int ENCRYPTION_KEY = 0xdeadbeef;
-    public Memory memory = null;
+
+    FunctionManager functionManager = null;
+    Iterator<Function> functions = null;
+    Listing listing = null;
+    Memory memory = null;
+    ReferenceManager refManager = null;
 
     @Override
     protected void run() throws Exception {
 
-        FunctionManager functionManager = currentProgram.getFunctionManager();
-        Iterator<Function> functions = functionManager.getFunctions(true);
-        Listing listing = currentProgram.getListing();
+        functionManager = currentProgram.getFunctionManager();
+        functions = functionManager.getFunctions(true);
+        listing = currentProgram.getListing();
         memory = currentProgram.getMemory();
-        ReferenceManager refManager = currentProgram.getReferenceManager();
+        refManager = currentProgram.getReferenceManager();
 
-        Function targetFunctionDecrypt = null;
-        Function targetFunctionCopy = null;
-        Address configAddress = null;
+        /*
+            00013218 80 01 a0 e1     mov        r0,r0, lsl #0x3
+            0001321c f0 40 2d e9     stmdb      sp!,{r4,r5,r6,r7,lr}
+            00013220 07 00 c0 e3     bic        r0,r0,#0x7
+            00013224 9c 30 9f e5     ldr        r3,[DAT_000132c8]                                = 00020E64h
+            00013228 80 0a a0 e1     mov        r0,r0, lsl #0x15
+            0001322c a0 0a a0 e1     mov        r0,r0, lsr #0x15
+            00013230 03 e0 80 e0     add        lr,r0,r3
+            00013234 90 30 9f e5     ldr        r3,[DAT_000132cc]                                = 00020B80h
+            00013238 04 70 8e e2     add        r7,lr,#0x4
+            0001323c 00 20 93 e5     ldr        r2,[r3,#0x0]=>mw_key                             = DEDEFBAFh
+            00013240 04 10 de e5     ldrb       r1,[lr,#0x4]=>DAT_00020e68                       = ??
+            00013244 01 30 d7 e5     ldrb       r3,[r7,#0x1]=>DAT_00020e69                       = ??
+         */
+        String[] patternDecrypt = {"mov", "stmdb", "bic", "ldr", "mov", "mov", "add"};
 
-        while (functions.hasNext()) {
-            Function func = functions.next();
-            AddressSetView functionBody = func.getBody();
+        /*
+            000143cc 00 00 52 e3     cmp        r2,#0x0
+            000143d0 0e f0 a0 01     moveq      pc,lr
+            000143d4 00 c0 a0 e3     mov        r12,#0x0
+                                LAB_000143d8                                    XREF[1]:     000143e8(j)  
+            000143d8 01 30 dc e7     ldrb       r3,[r12,r1]
+            000143dc 00 30 cc e7     strb       r3,[r12,r0]
+            000143e0 01 c0 8c e2     add        r12,r12,#0x1
+            000143e4 02 00 5c e1     cmp        r12,r2
+            000143e8 fa ff ff 1a     bne        LAB_000143d8
+            000143ec 0e f0 a0 e1     mov        pc,lr
+         */
+        String[] patternCopy = {"cmp", "moveq", "mov", "ldrb", "strb", "add", "cmp"};
 
-            InstructionIterator instructions = listing.getInstructions(functionBody, true);
+        Function targetFunctionDecrypt = locateFunctionByPattern(patternDecrypt);
 
-            /*
-				00013218 80 01 a0 e1     mov        r0,r0, lsl #0x3
-				0001321c f0 40 2d e9     stmdb      sp!,{r4,r5,r6,r7,lr}
-				00013220 07 00 c0 e3     bic        r0,r0,#0x7
-				00013224 9c 30 9f e5     ldr        r3,[DAT_000132c8]                                = 00020E64h
-				00013228 80 0a a0 e1     mov        r0,r0, lsl #0x15
-				0001322c a0 0a a0 e1     mov        r0,r0, lsr #0x15
-				00013230 03 e0 80 e0     add        lr,r0,r3
-				00013234 90 30 9f e5     ldr        r3,[DAT_000132cc]                                = 00020B80h
-				00013238 04 70 8e e2     add        r7,lr,#0x4
-				0001323c 00 20 93 e5     ldr        r2,[r3,#0x0]=>mw_key                             = DEDEFBAFh
-				00013240 04 10 de e5     ldrb       r1,[lr,#0x4]=>DAT_00020e68                       = ??
-				00013244 01 30 d7 e5     ldrb       r3,[r7,#0x1]=>DAT_00020e69                       = ??
-             */
-            String[] patternDecrypt = {"mov", "stmdb", "bic", "ldr", "mov", "mov", "add"};
-            int matchIndexDecrypt = 0;
-
-            /*
-				000143cc 00 00 52 e3     cmp        r2,#0x0
-				000143d0 0e f0 a0 01     moveq      pc,lr
-				000143d4 00 c0 a0 e3     mov        r12,#0x0
-									LAB_000143d8                                    XREF[1]:     000143e8(j)  
-				000143d8 01 30 dc e7     ldrb       r3,[r12,r1]
-				000143dc 00 30 cc e7     strb       r3,[r12,r0]
-				000143e0 01 c0 8c e2     add        r12,r12,#0x1
-				000143e4 02 00 5c e1     cmp        r12,r2
-				000143e8 fa ff ff 1a     bne        LAB_000143d8
-				000143ec 0e f0 a0 e1     mov        pc,lr
-             */
-            String[] patternCopy = {"cmp", "moveq", "mov", "ldrb", "strb", "add", "cmp"};
-            int matchIndexCopy = 0;
-
-            Instruction instructionLdr = null;
-            while (instructions.hasNext()) {
-                Instruction instruction = instructions.next();
-                String mnemonic = instruction.getMnemonicString();
-
-                if (mnemonic.equals(patternDecrypt[matchIndexDecrypt])) {
-                    if (mnemonic.equals("ldr")) {
-                        instructionLdr = instruction;
-                    }
-
-                    matchIndexDecrypt++;
-
-                    if (matchIndexDecrypt == patternDecrypt.length) {
-                        targetFunctionDecrypt = func;
-
-                        // get config address
-                        Object[] opObjs1 = instructionLdr.getOpObjects(1);
-                        Object opObj1 = opObjs1[0];
-                        Address address = toAddr(opObj1.toString());
-                        // deref
-                        int value = memory.getInt(address);
-                        configAddress = toAddr(value);
-
-                        break;
-                    }
-
-                } else {
-                    matchIndexDecrypt = 0;
-
-                    if (mnemonic.equals(patternDecrypt[0])) {
-                        matchIndexCopy = 1;
-                    }
-                }
-
-                if (mnemonic.equals(patternCopy[matchIndexCopy])) {
-
-                    matchIndexCopy++;
-
-                    if (matchIndexCopy == patternCopy.length) {
-                        targetFunctionCopy = func;
-
-                        break;
-                    }
-
-                } else {
-                    matchIndexCopy = 0;
-
-                    if (mnemonic.equals(patternCopy[0])) {
-                        matchIndexCopy = 1;
-                    }
-                }
-            }
-        }
-
-        if (targetFunctionDecrypt != null) {
-            println("located decryption function: " + targetFunctionDecrypt.getName());
-        } else {
+        if (targetFunctionDecrypt == null) {
             println("could not locate decryption function");
             return;
         }
-        if (configAddress != null) {
-            println("config address: " + configAddress.toString());
-        } else {
+
+        println("located decryption function: " + targetFunctionDecrypt.getName());
+
+        Address configAddress = locateConfigAddress(targetFunctionDecrypt);
+
+        if (configAddress == null) {
             println("could not locate config address");
             return;
         }
 
-        if (targetFunctionCopy != null) {
-            println("located copy function: " + targetFunctionCopy.getName());
-        } else {
+        println("config address: " + configAddress.toString());
+
+        Function targetFunctionCopy = locateFunctionByPattern(patternCopy);
+
+        if (targetFunctionCopy == null) {
             println("could not locate copy function");
             return;
         }
 
-        ReferenceIterator references = refManager.getReferencesTo(targetFunctionDecrypt.getEntryPoint());
-        List<Address> addressList = new ArrayList<>();
-        while (references.hasNext()) {
-            Reference reference = references.next();
-            //println(reference.toString());
-            Address fromAddr = reference.getFromAddress();
-            Address currentAddr = fromAddr;
+        println("located copy function: " + targetFunctionCopy.getName());
 
-            for (int i = 0; i < 4; i++) {
-                currentAddr = currentAddr.subtract(4);
-                Instruction instruction = listing.getInstructionAt(currentAddr);
-                String mnemonic = instruction.getMnemonicString();
-                Object[] opObjs0 = instruction.getOpObjects(0);
-                Object opObj0 = opObjs0[0];
-                if (mnemonic.equals("mov") && opObj0.toString().equals("r0")) {
-                    Object[] opObjs1 = instruction.getOpObjects(1);
-                    Object opObj1 = opObjs1[0];
-                    int value = (int) ((Scalar) opObj1).getValue();
-                    value *= 8;
-                    value += configAddress.getOffset();
-                    Address address = toAddr(value);
-                    //println(address.toString());
-                    addressList.add(address);
-                    break;
-                }
-            }
-        }
+        List<Address> referencedConfigAddressList = locateReferencedConfigAddresses(targetFunctionDecrypt, configAddress);
+
+        ReferenceIterator references = refManager.getReferencesTo(targetFunctionDecrypt.getEntryPoint());
 
         references = refManager.getReferencesTo(targetFunctionCopy.getEntryPoint());
         HashMap<Address, AddressSize> addressMap = new HashMap<>();
@@ -339,7 +261,7 @@ public class MiraiConfigExtractorSORA extends GhidraScript {
                                 }
                             }
                             if (trackMnemonic.equals("stmdb")) {
-                                println("error: epilogue reached while tracking cpy registers");
+                                println("error: prologue reached while tracking cpy registers");
                                 return;
                             }
                         }
@@ -349,39 +271,7 @@ public class MiraiConfigExtractorSORA extends GhidraScript {
                 }
             }
         }
-        /*
-        for (Map.Entry<Address, Address> entry : addressMap.entrySet()) {
-            Address address = entry.getValue();
-            println(decode(address));
-        }
-         */
-        //println("number of total configs: " + addressMap.size());
-        //println("number of used configs: " + addressList.size());
-        /*
-        for (Address address : addressList) {
-            Address addressMapped = addressMap.get(address);
-            println(address.toString() + " - " + toAddr(address.getOffset() / 8 - configAddress.getOffset() / 8).toString() + " - " + addressMapped.toString() + " - " + decode(addressMapped));
-        }
 
-        println("sizeList:");
-        for (long size : sizeList) {
-            println("" + size);
-        }
-
-        println("size of sizeList: " + sizeList.size());
-         */
-
-        // todo: they are not mapped properly ..............
-        /*
-        for (int i = 0; i < addressList.size(); i++) {
-            Address address = addressList.get(i);
-            Long size = sizeList.get(i);
-
-            Address addressMapped = addressMap.get(address);
-            println(address.toString() + " - " + toAddr(address.getOffset() / 8 - configAddress.getOffset() / 8).toString() + " - " + addressMapped.toString() + " - " + decode(addressMapped, size));
-
-        }
-         */
         for (Map.Entry<Address, AddressSize> entry : addressMap.entrySet()) {
             Address mappedAddress = entry.getKey();
             AddressSize addressSize = entry.getValue();
@@ -390,19 +280,114 @@ public class MiraiConfigExtractorSORA extends GhidraScript {
                     + addressSize.address.toString() + " (size: "
                     + addressSize.size + ")");
         }
-        /*
-        for (Map.Entry<Address, AddressSize> entry : addressMap.entrySet()) {
-            Address mappedAddress = entry.getKey();
-            AddressSize addressSize = entry.getValue();
 
-            println(decode(addressSize.address, addressSize.size));
-        }
-         */
-        for (Address address : addressList) {
+        for (Address address : referencedConfigAddressList) {
             AddressSize addressMapped = addressMap.get(address);
             println(address.toString() + " - " + toAddr(address.getOffset() / 8 - configAddress.getOffset() / 8).toString() + " - " + addressMapped.address.toString() + " - " + decode(addressMapped.address, addressMapped.size));
         }
         println("size of addressMap: " + addressMap.size());
+    }
+
+    private Function locateFunctionByPattern(String[] pattern) {
+        int matchIndex = 0;
+        Function targetFunction = null;
+        functionLoop:
+        while (functions.hasNext()) {
+            Function func = functions.next();
+            AddressSetView functionBody = func.getBody();
+            InstructionIterator instructions = listing.getInstructions(functionBody, true);
+
+            while (instructions.hasNext()) {
+                Instruction instruction = instructions.next();
+                String mnemonic = instruction.getMnemonicString();
+
+                if (mnemonic.equals(pattern[matchIndex])) {
+                    matchIndex++;
+
+                    if (matchIndex == pattern.length) {
+                        targetFunction = func;
+
+                        break functionLoop;
+                    }
+
+                } else {
+                    matchIndex = 0;
+
+                    if (mnemonic.equals(pattern[0])) {
+                        matchIndex = 1;
+                    }
+                }
+            }
+        }
+        return targetFunction;
+    }
+
+    private Address locateConfigAddress(Function targetFunction) throws Exception {
+        // Start address of the configuration data block is loaded by the first `ldr`
+        // in the config decryption function.
+
+        /*
+            00013218 80 01 a0 e1     mov        r0,r0, lsl #0x3
+            0001321c f0 40 2d e9     stmdb      sp!,{r4,r5,r6,r7,lr}
+            00013220 07 00 c0 e3     bic        r0,r0,#0x7
+            00013224 9c 30 9f e5     ldr        r3,[DAT_000132c8]                                = 00020E64h
+         */
+        AddressSetView functionBody = targetFunction.getBody();
+        InstructionIterator instructions = listing.getInstructions(functionBody, true);
+
+        Address configAddress = null;
+        while (instructions.hasNext()) {
+            Instruction instruction = instructions.next();
+            String mnemonic = instruction.getMnemonicString();
+
+            if (mnemonic.equals("ldr")) {
+                Object[] opObjs1 = instruction.getOpObjects(1);
+                Object opObj1 = opObjs1[0];
+                Address address = toAddr(opObj1.toString());
+                // deref
+                int value = memory.getInt(address);
+                configAddress = toAddr(value);
+                break;
+            }
+
+        }
+        return configAddress;
+    }
+
+    private List<Address> locateReferencedConfigAddresses(Function targetFunctionDecrypt, Address configAddress) {
+        // Locate the references to the config decryption function and check the parameter passed in r0.
+        // r0 holds the config ID which is an offset multiplied by 8 and added to the start address of the config block.
+
+        /*
+            0000a7bc 14 00 a0 e3     mov        r0,#0x14
+            0000a7c0 94 22 00 eb     bl         mw_decrypt_with_key                              undefined mw_decrypt_with_key()
+         */
+        ReferenceIterator references = refManager.getReferencesTo(targetFunctionDecrypt.getEntryPoint());
+        List<Address> addressList = new ArrayList<>();
+        while (references.hasNext()) {
+            Reference reference = references.next();
+            Address fromAddr = reference.getFromAddress();
+            Address currentAddr = fromAddr;
+
+            for (int i = 0; i < 4; i++) {
+                currentAddr = currentAddr.subtract(4);
+                Instruction instruction = listing.getInstructionAt(currentAddr);
+                String mnemonic = instruction.getMnemonicString();
+                Object[] opObjs0 = instruction.getOpObjects(0);
+                Object opObj0 = opObjs0[0];
+                if (mnemonic.equals("mov") && opObj0.toString().equals("r0")) {
+                    Object[] opObjs1 = instruction.getOpObjects(1);
+                    Object opObj1 = opObjs1[0];
+                    int value = (int) ((Scalar) opObj1).getValue();
+                    value *= 8;
+                    value += configAddress.getOffset();
+                    Address address = toAddr(value);
+                    addressList.add(address);
+                    break;
+                }
+            }
+        }
+        return addressList;
     }
 
     private class AddressSize {
