@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 import ghidra.app.script.GhidraScript;
 import ghidra.program.model.address.Address;
@@ -95,7 +94,7 @@ public class MiraiConfigExtractorSORA extends GhidraScript {
             return;
         }
 
-        println("config address: " + configAddress.toString());
+        println("located config address: " + configAddress.toString());
 
         Function targetFunctionCopy = locateFunctionByPattern(patternCopy);
 
@@ -108,184 +107,16 @@ public class MiraiConfigExtractorSORA extends GhidraScript {
 
         List<Address> referencedConfigAddressList = locateReferencedConfigAddresses(targetFunctionDecrypt, configAddress);
 
-        ReferenceIterator references = refManager.getReferencesTo(targetFunctionDecrypt.getEntryPoint());
+        println("located " + referencedConfigAddressList.size() + " referenced config blocks");
 
-        references = refManager.getReferencesTo(targetFunctionCopy.getEntryPoint());
-        HashMap<Address, AddressSize> addressMap = new HashMap<>();
-        List<Long> sizeList = new ArrayList<>();
-        Address addressOfCopiedData = null;
-        Address addressOfOrigData = null;
-        long additionTotal = 0;
-        while (references.hasNext()) {
-            Reference reference = references.next();
-            //println(reference.toString());
-            Address fromAddr = reference.getFromAddress();
-            Address currentAddr = fromAddr;
+        HashMap<Address, AddressSize> mappedConfigData = mapConfigData(targetFunctionCopy, configAddress);
 
-            boolean configFound = false;
-            for (int i = 0; i < 4; i++) {
-                currentAddr = currentAddr.subtract(4);
-                Instruction instruction = listing.getInstructionAt(currentAddr);
-                String mnemonic = instruction.getMnemonicString();
-                Object[] opObjs0 = instruction.getOpObjects(0);
-                Object opObj0 = opObjs0[0];
-                if (mnemonic.equals("ldr") && opObj0.toString().equals("r1")) {
-                    Object[] opObjs1 = instruction.getOpObjects(1);
-                    Object opObj1 = opObjs1[0];
-                    if (opObj1.toString().contains("sp")) {
-                        continue;
-                    }
-
-                    addressOfOrigData = toAddr(opObj1.toString());
-                    // deref
-                    int value = memory.getInt(addressOfOrigData);
-                    addressOfOrigData = toAddr(value);
-                    //println(addressOfOrigData.toString());
-                    configFound = true;
-                    break;
-                }
-            }
-
-            // todo: review the variable names
-            if (configFound) {
-                currentAddr = fromAddr;
-                for (int i = 0; i < 4; i++) {
-                    currentAddr = currentAddr.add(4);
-                    Instruction instruction = listing.getInstructionAt(currentAddr);
-                    //println(instruction.toString());
-                    String mnemonic = instruction.getMnemonicString();
-                    if (mnemonic.equals("str")) {
-                        Object[] opObjs1 = instruction.getOpObjects(1);
-                        Object opObj1 = opObjs1[1];
-                        long value = ((Scalar) opObj1).getValue();
-                        value += configAddress.getOffset();
-                        addressOfCopiedData = toAddr(value);
-                        //println(address2.toString());
-                        //addressMap.put(addressOfCopiedData, addressOfOrigData);
-                    }
-                }
-
-                currentAddr = fromAddr;
-                while (true) {
-                    currentAddr = currentAddr.subtract(4);
-                    //println(currentAddr.toString());
-                    Instruction instruction = listing.getInstructionAt(currentAddr);
-                    String mnemonic = instruction.getMnemonicString();
-
-                    if (mnemonic.equals("mov")) {
-                        Object[] opObjs0 = instruction.getOpObjects(0);
-                        Object opObj0 = opObjs0[0];
-                        if (opObj0.toString().equals("r2")) {
-                            Scalar scalar = instruction.getScalar(1);
-                            long size = scalar.getValue();
-                            sizeList.add(size);
-                            println(addressOfCopiedData.toString() + " - " + addressOfOrigData.toString() + " - " + size + " (mov)");
-                            addressMap.put(addressOfCopiedData, new AddressSize(addressOfOrigData, size));
-                            break;
-                        }
-                    }
-
-                    if (mnemonic.equals("bl") || mnemonic.equals("stmdb")) {
-                        //println("found bl or stmdb at " + currentAddr + ", following cpy");
-                        // we did not find the size value by looking for `mov r2, <size>`
-                        // we need to follow the `cpy r2, <reg>` instruction now
-                        Address tmpAddr = fromAddr;
-                        tmpAddr = tmpAddr.subtract(4);
-                        instruction = listing.getInstructionAt(tmpAddr);
-                        //println("tmpInstr - " + instruction.toString() + " @ " + tmpAddr.toString());
-                        mnemonic = instruction.getMnemonicString();
-
-                        Object tmpOpObj0 = null;
-                        if (instruction.getNumOperands() > 0) {
-                            Object[] opObjs0 = instruction.getOpObjects(0);
-                            tmpOpObj0 = opObjs0[0];
-                        }
-
-                        while (!(mnemonic.equals("cpy") && tmpOpObj0.toString().equals("r2"))) {
-                            tmpAddr = tmpAddr.subtract(4);
-                            instruction = listing.getInstructionAt(tmpAddr);
-                            //println("tmpInstr - " + instruction.toString() + " @ " + tmpAddr.toString());
-                            mnemonic = instruction.getMnemonicString();
-                            Object[] opObjs0 = instruction.getOpObjects(0);
-                            tmpOpObj0 = opObjs0[0];
-                        }
-
-                        //println("cpy r2 found @ " + tmpAddr.toString());
-                        Object[] opObjs1 = instruction.getOpObjects(1);
-                        Object opObj1 = opObjs1[0];
-
-                        String targetReg = opObj1.toString();
-                        //println("tracking " + targetReg);
-                        additionTotal = 0;
-                        Address trackAddr = tmpAddr;
-
-                        while (true) {
-                            trackAddr = trackAddr.subtract(4);
-                            Instruction trackInst = listing.getInstructionAt(trackAddr);
-
-                            String trackMnemonic = trackInst.getMnemonicString();
-
-                            if (trackInst.getNumOperands() > 0) {
-                                Object[] trackOpObjs0 = trackInst.getOpObjects(0);
-                                if (trackOpObjs0[0].toString().equals(targetReg)) {
-
-                                    if (trackMnemonic.equals("mov")) {
-                                        Scalar trackScalar = trackInst.getScalar(1);
-                                        long trackSize = trackScalar.getValue();
-                                        // Add any accumulated additions to the final size
-                                        if (additionTotal > 0) {
-                                            trackSize += additionTotal;
-                                            println(addressOfCopiedData.toString() + " - " + addressOfOrigData.toString() + " - " + trackSize + " (cpy+adds " + additionTotal + ")");
-                                        } else {
-                                            println(addressOfCopiedData.toString() + " - " + addressOfOrigData.toString() + " - " + trackSize + " (cpy)");
-                                        }
-
-                                        addressMap.put(addressOfCopiedData, new AddressSize(addressOfOrigData, trackSize));
-                                        sizeList.add(trackSize);
-                                        break;
-                                    } else if (trackMnemonic.equals("cpy")) {
-                                        Object[] trackOpObjs1 = trackInst.getOpObjects(1);
-                                        targetReg = trackOpObjs1[0].toString();
-                                    } else if (trackMnemonic.equals("add")) {
-                                        if (trackInst.getNumOperands() > 2 && trackInst.getOpObjects(2)[0] instanceof Scalar) {
-                                            Scalar addValue = (Scalar) trackInst.getOpObjects(2)[0];
-                                            long value = addValue.getValue();
-                                            additionTotal += value;
-                                            println("Found addition to " + targetReg + ": +" + value);
-                                        } else {
-                                            Object[] trackOpObjs1 = trackInst.getOpObjects(1);
-                                            targetReg = trackOpObjs1[0].toString();
-                                            println("Following register after add: " + targetReg);
-                                        }
-                                    }
-                                }
-                            }
-                            if (trackMnemonic.equals("stmdb")) {
-                                println("error: prologue reached while tracking cpy registers");
-                                return;
-                            }
-                        }
-                        break;
-
-                    }
-                }
-            }
-        }
-
-        for (Map.Entry<Address, AddressSize> entry : addressMap.entrySet()) {
-            Address mappedAddress = entry.getKey();
-            AddressSize addressSize = entry.getValue();
-
-            println(mappedAddress.toString() + " -> "
-                    + addressSize.address.toString() + " (size: "
-                    + addressSize.size + ")");
-        }
+        println("located " + mappedConfigData.size() + " total config blocks");
 
         for (Address address : referencedConfigAddressList) {
-            AddressSize addressMapped = addressMap.get(address);
+            AddressSize addressMapped = mappedConfigData.get(address);
             println(address.toString() + " - " + toAddr(address.getOffset() / 8 - configAddress.getOffset() / 8).toString() + " - " + addressMapped.address.toString() + " - " + decode(addressMapped.address, addressMapped.size));
         }
-        println("size of addressMap: " + addressMap.size());
     }
 
     private Function locateFunctionByPattern(String[] pattern) {
@@ -390,6 +221,152 @@ public class MiraiConfigExtractorSORA extends GhidraScript {
         return addressList;
     }
 
+    private HashMap<Address, AddressSize> mapConfigData(Function targetFunctionCopy, Address configAddress) throws Exception {
+        ReferenceIterator references = refManager.getReferencesTo(targetFunctionCopy.getEntryPoint());
+        HashMap<Address, AddressSize> mappedConfigData = new HashMap<>();
+        Address addressOfCopiedData = null;
+        Address addressOfOrigData = null;
+        long additionTotal = 0;
+        while (references.hasNext()) {
+            Reference reference = references.next();
+            Address fromAddr = reference.getFromAddress();
+            Address currentAddr = fromAddr;
+
+            boolean configFound = false;
+            for (int i = 0; i < 4; i++) {
+                currentAddr = currentAddr.subtract(4);
+                Instruction instruction = listing.getInstructionAt(currentAddr);
+                String mnemonic = instruction.getMnemonicString();
+                Object[] opObjs0 = instruction.getOpObjects(0);
+                Object opObj0 = opObjs0[0];
+                if (mnemonic.equals("ldr") && opObj0.toString().equals("r1")) {
+                    Object[] opObjs1 = instruction.getOpObjects(1);
+                    Object opObj1 = opObjs1[0];
+                    if (opObj1.toString().contains("sp")) {
+                        continue;
+                    }
+
+                    addressOfOrigData = toAddr(opObj1.toString());
+                    // deref
+                    int value = memory.getInt(addressOfOrigData);
+                    addressOfOrigData = toAddr(value);
+                    configFound = true;
+                    break;
+                }
+            }
+
+            // todo: review the variable names
+            if (configFound) {
+                currentAddr = fromAddr;
+                for (int i = 0; i < 4; i++) {
+                    currentAddr = currentAddr.add(4);
+                    Instruction instruction = listing.getInstructionAt(currentAddr);
+                    String mnemonic = instruction.getMnemonicString();
+                    if (mnemonic.equals("str")) {
+                        Object[] opObjs1 = instruction.getOpObjects(1);
+                        Object opObj1 = opObjs1[1];
+                        long value = ((Scalar) opObj1).getValue();
+                        value += configAddress.getOffset();
+                        addressOfCopiedData = toAddr(value);
+                    }
+                }
+
+                currentAddr = fromAddr;
+                while (true) {
+                    currentAddr = currentAddr.subtract(4);
+                    Instruction instruction = listing.getInstructionAt(currentAddr);
+                    String mnemonic = instruction.getMnemonicString();
+
+                    if (mnemonic.equals("mov")) {
+                        Object[] opObjs0 = instruction.getOpObjects(0);
+                        Object opObj0 = opObjs0[0];
+                        if (opObj0.toString().equals("r2")) {
+                            Scalar scalar = instruction.getScalar(1);
+                            long size = scalar.getValue();
+                            mappedConfigData.put(addressOfCopiedData, new AddressSize(addressOfOrigData, size));
+                            break;
+                        }
+                    }
+
+                    if (mnemonic.equals("bl") || mnemonic.equals("stmdb")) {
+                        // we did not find the size value by looking for `mov r2, <size>`
+                        // we need to follow the `cpy r2, <reg>` instruction now
+                        Address tmpAddr = fromAddr;
+                        tmpAddr = tmpAddr.subtract(4);
+                        instruction = listing.getInstructionAt(tmpAddr);
+                        mnemonic = instruction.getMnemonicString();
+
+                        Object tmpOpObj0 = null;
+                        if (instruction.getNumOperands() > 0) {
+                            Object[] opObjs0 = instruction.getOpObjects(0);
+                            tmpOpObj0 = opObjs0[0];
+                        }
+
+                        while (!(mnemonic.equals("cpy") && tmpOpObj0.toString().equals("r2"))) {
+                            tmpAddr = tmpAddr.subtract(4);
+                            instruction = listing.getInstructionAt(tmpAddr);
+                            mnemonic = instruction.getMnemonicString();
+                            Object[] opObjs0 = instruction.getOpObjects(0);
+                            tmpOpObj0 = opObjs0[0];
+                        }
+
+                        Object[] opObjs1 = instruction.getOpObjects(1);
+                        Object opObj1 = opObjs1[0];
+
+                        String targetReg = opObj1.toString();
+                        additionTotal = 0;
+                        Address trackAddr = tmpAddr;
+
+                        while (true) {
+                            trackAddr = trackAddr.subtract(4);
+                            Instruction trackInst = listing.getInstructionAt(trackAddr);
+
+                            String trackMnemonic = trackInst.getMnemonicString();
+
+                            if (trackInst.getNumOperands() > 0) {
+                                Object[] trackOpObjs0 = trackInst.getOpObjects(0);
+                                if (trackOpObjs0[0].toString().equals(targetReg)) {
+
+                                    if (trackMnemonic.equals("mov")) {
+                                        Scalar trackScalar = trackInst.getScalar(1);
+                                        long trackSize = trackScalar.getValue();
+                                        // Add any accumulated additions to the final size
+                                        if (additionTotal > 0) {
+                                            trackSize += additionTotal;
+                                        }
+
+                                        mappedConfigData.put(addressOfCopiedData, new AddressSize(addressOfOrigData, trackSize));
+                                        break;
+                                    } else if (trackMnemonic.equals("cpy")) {
+                                        Object[] trackOpObjs1 = trackInst.getOpObjects(1);
+                                        targetReg = trackOpObjs1[0].toString();
+                                    } else if (trackMnemonic.equals("add")) {
+                                        if (trackInst.getNumOperands() > 2 && trackInst.getOpObjects(2)[0] instanceof Scalar) {
+                                            Scalar addValue = (Scalar) trackInst.getOpObjects(2)[0];
+                                            long value = addValue.getValue();
+                                            additionTotal += value;
+                                        } else {
+                                            Object[] trackOpObjs1 = trackInst.getOpObjects(1);
+                                            targetReg = trackOpObjs1[0].toString();
+                                        }
+                                    }
+                                }
+                            }
+                            if (trackMnemonic.equals("stmdb")) {
+                                println("error: prologue reached while tracking cpy registers");
+                                return null;
+                            }
+                        }
+                        break;
+
+                    }
+                }
+            }
+        }
+
+        return mappedConfigData;
+    }
+
     private class AddressSize {
 
         public Address address;
@@ -442,6 +419,5 @@ public class MiraiConfigExtractorSORA extends GhidraScript {
         }
 
         return asciiOutput.toString() + " (" + hexOutput.toString().trim() + ")";
-        //return asciiOutput.toString();
     }
 }
