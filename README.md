@@ -535,7 +535,7 @@ Alternatively, you can use the following action: `Function Call Trees` → `Outg
 
 <details>
 
-<summary><code>HancitorConfigExtractor.log</code></summary>
+<summary><code>MiraiCredentialExtractorSORA.log</code></summary>
 
 ```
 MiraiCredentialExtractorSORA.java> Running...
