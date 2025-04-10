@@ -113,6 +113,8 @@ public class MiraiConfigExtractorSORA extends GhidraScript {
 
         println("located " + mappedConfigData.size() + " total config blocks");
 
+        println("referenced config blocks (.bss address - config ID - .rodata address - string (hex bytes)):");
+
         for (Address address : referencedConfigAddressList) {
             AddressSize addressMapped = mappedConfigData.get(address);
             println(address.toString() + " - " + toAddr(address.getOffset() / 8 - configAddress.getOffset() / 8).toString() + " - " + addressMapped.address.toString() + " - " + decode(addressMapped.address, addressMapped.size));
@@ -222,17 +224,41 @@ public class MiraiConfigExtractorSORA extends GhidraScript {
     }
 
     private HashMap<Address, AddressSize> mapConfigData(Function targetFunctionCopy, Address configAddress) throws Exception {
+        // Previously we collected the referenced configuration data blocks (by following the decryption function references).
+        // Now we collect all configuration data blocks (by following the copy function references).
+        // This function copies the hardcoded encrypted data from .rodata to dynamically allocated blocks
+        // The address of these dynamically allocated blocks are stored in .bss.
+        // After that we map the 2 results.
         ReferenceIterator references = refManager.getReferencesTo(targetFunctionCopy.getEntryPoint());
         HashMap<Address, AddressSize> mappedConfigData = new HashMap<>();
-        Address addressOfCopiedData = null;
-        Address addressOfOrigData = null;
+        Address addressOfBssData = null;
+        Address addressOfRoData = null;
         long additionTotal = 0;
         while (references.hasNext()) {
             Reference reference = references.next();
-            Address fromAddr = reference.getFromAddress();
-            Address currentAddr = fromAddr;
+            Address addressOfFunctionCall = reference.getFromAddress();
+            Address currentAddr = addressOfFunctionCall;
 
             boolean configFound = false;
+            // Check the 4 instructions before the function call and look for the value loaded into r1.
+            // r1 holds the .rodata address of the encrypted data.
+            // Example:
+            /*
+                000132d4 02 00 a0 e3     mov        r0,#0x2
+                000132d8 ff 08 00 eb     bl         mw_alloc                                         undefined mw_alloc()
+                000132dc 02 50 a0 e3     mov        r5,#0x2
+                000132e0 d8 4e 9f e5     ldr        r4,[DAT_000141c0]                                = 00020E64h
+                000132e4 05 20 a0 e1     cpy        r2,r5
+                000132e8 d4 1e 9f e5     ldr        r1=>s_Qt_00017cf0,[DAT_000141c4]                 = "Qt"
+                                                                                                    = 00017CF0h
+                000132ec 00 60 a0 e3     mov        r6,#0x0
+                000132f0 00 70 a0 e1     cpy        r7,r0
+                000132f4 34 04 00 eb     bl         mw_copy                                          undefined mw_copy()
+             */
+ /*
+                uVar1 = mw_alloc(2);
+                mw_copy(uVar1,"Qt",2);
+             */
             for (int i = 0; i < 4; i++) {
                 currentAddr = currentAddr.subtract(4);
                 Instruction instruction = listing.getInstructionAt(currentAddr);
@@ -242,124 +268,195 @@ public class MiraiConfigExtractorSORA extends GhidraScript {
                 if (mnemonic.equals("ldr") && opObj0.toString().equals("r1")) {
                     Object[] opObjs1 = instruction.getOpObjects(1);
                     Object opObj1 = opObjs1[0];
+                    // This is a generic copy function and is being used frequently in the code,
+                    // so we need to filter out false positives, e.g. ldr r1,[sp,#0x4].
                     if (opObj1.toString().contains("sp")) {
                         continue;
                     }
 
-                    addressOfOrigData = toAddr(opObj1.toString());
+                    addressOfRoData = toAddr(opObj1.toString());
                     // deref
-                    int value = memory.getInt(addressOfOrigData);
-                    addressOfOrigData = toAddr(value);
+                    int value = memory.getInt(addressOfRoData);
+                    addressOfRoData = toAddr(value);
                     configFound = true;
                     break;
                 }
             }
 
-            // todo: review the variable names
-            if (configFound) {
-                currentAddr = fromAddr;
-                for (int i = 0; i < 4; i++) {
-                    currentAddr = currentAddr.add(4);
-                    Instruction instruction = listing.getInstructionAt(currentAddr);
-                    String mnemonic = instruction.getMnemonicString();
-                    if (mnemonic.equals("str")) {
-                        Object[] opObjs1 = instruction.getOpObjects(1);
-                        Object opObj1 = opObjs1[1];
-                        long value = ((Scalar) opObj1).getValue();
-                        value += configAddress.getOffset();
-                        addressOfCopiedData = toAddr(value);
+            if (!configFound) {
+                continue;
+            }
+
+            // Now we check the 4 instructions after the function call,
+            // the goal is to find the address of the dynamically allocated block (stored in .bss).
+            // This address can be found in the 1. operand of the str instruction.
+            // r4 holds the start address of the configuration block.
+            // Example:
+            /*
+                000132e0 d8 4e 9f e5     ldr        r4,[DAT_000141c0]                                = 00020E64h
+                ...
+                000132f4 34 04 00 eb     bl         mw_copy                                          undefined mw_copy()
+                000132f8 05 00 a0 e1     cpy        r0,r5
+                000132fc 08 70 84 e5     str        r7,[r4,#0x8]=>DAT_00020e6c                       = ??
+                00013300 0c 50 c4 e5     strb       r5,[r4,#0xc]=>DAT_00020e70                       = ??
+                00013304 0d 60 c4 e5     strb       r6,[r4,#0xd]=>DAT_00020e71                       = ??
+             */
+ /*
+                uVar1 = mw_alloc(2);
+                mw_copy(uVar1,"Qt",2);
+                DAT_00020e70 = 2;
+                DAT_00020e71 = 0;
+                DAT_00020e6c = uVar1;
+             */
+            currentAddr = addressOfFunctionCall;
+            for (int i = 0; i < 4; i++) {
+                currentAddr = currentAddr.add(4);
+                Instruction instruction = listing.getInstructionAt(currentAddr);
+                String mnemonic = instruction.getMnemonicString();
+                if (mnemonic.equals("str")) {
+                    Object[] opObjs1 = instruction.getOpObjects(1);
+                    Object opObj1 = opObjs1[1];
+                    long value = ((Scalar) opObj1).getValue();
+                    value += configAddress.getOffset();
+                    addressOfBssData = toAddr(value);
+                }
+            }
+
+            // At this point we located the .rodata and .bss address pairs.
+            // The only missing information is the size of the configuration data block,
+            // which is passed via r2 to the copy function.
+            currentAddr = addressOfFunctionCall;
+            while (true) {
+                currentAddr = currentAddr.subtract(4);
+                Instruction instruction = listing.getInstructionAt(currentAddr);
+                String mnemonic = instruction.getMnemonicString();
+
+                // It is trivial to retrieve the size in case an immediate value is loaded into r2:
+                // Example:
+                /*
+                    00013334 11 20 a0 e3     mov        r2,#0x11
+                    00013338 11 b0 a0 e3     mov        r11,#0x11
+                    0001333c 00 50 a0 e1     cpy        r5,r0
+                    00013340 21 04 00 eb     bl         mw_copy                                          undefined mw_copy()
+                 */
+                if (mnemonic.equals("mov")) {
+                    Object[] opObjs0 = instruction.getOpObjects(0);
+                    Object opObj0 = opObjs0[0];
+                    if (opObj0.toString().equals("r2")) {
+                        Scalar scalar = instruction.getScalar(1);
+                        long size = scalar.getValue();
+                        mappedConfigData.put(addressOfBssData, new AddressSize(addressOfRoData, size));
+                        break;
                     }
                 }
 
-                currentAddr = fromAddr;
-                while (true) {
-                    currentAddr = currentAddr.subtract(4);
-                    Instruction instruction = listing.getInstructionAt(currentAddr);
-                    String mnemonic = instruction.getMnemonicString();
+                // In other cases the value is copied from an other register to r2.
+                // Example:
+                /*
+                    000132e4 05 20 a0 e1     cpy        r2,r5
+                    000132e8 d4 1e 9f e5     ldr        r1=>s_Qt_00017cf0,[DAT_000141c4]                 = "Qt"
+                                                                                                        = 00017CF0h
+                    000132ec 00 60 a0 e3     mov        r6,#0x0
+                    000132f0 00 70 a0 e1     cpy        r7,r0
+                    000132f4 34 04 00 eb     bl         mw_copy                                          undefined mw_copy()
+                 */
+                // When this happens we need to follow the source register until we find the immediate value.
+                // The idea is that we check the previous instructions until we find a bl.
+                // If we did not find a mov r2, <size> then we look for cpy.
+                if (mnemonic.equals("bl")) {
+                    Address trackAddressOfCpy = addressOfFunctionCall;
+                    trackAddressOfCpy = trackAddressOfCpy.subtract(4);
+                    instruction = listing.getInstructionAt(trackAddressOfCpy);
+                    mnemonic = instruction.getMnemonicString();
 
-                    if (mnemonic.equals("mov")) {
+                    Object opObj0 = null;
+                    if (instruction.getNumOperands() > 0) {
                         Object[] opObjs0 = instruction.getOpObjects(0);
-                        Object opObj0 = opObjs0[0];
-                        if (opObj0.toString().equals("r2")) {
-                            Scalar scalar = instruction.getScalar(1);
-                            long size = scalar.getValue();
-                            mappedConfigData.put(addressOfCopiedData, new AddressSize(addressOfOrigData, size));
-                            break;
-                        }
+                        opObj0 = opObjs0[0];
                     }
 
-                    if (mnemonic.equals("bl") || mnemonic.equals("stmdb")) {
-                        // we did not find the size value by looking for `mov r2, <size>`
-                        // we need to follow the `cpy r2, <reg>` instruction now
-                        Address tmpAddr = fromAddr;
-                        tmpAddr = tmpAddr.subtract(4);
-                        instruction = listing.getInstructionAt(tmpAddr);
+                    // Search until we find the cpy r2, <source register> instruction.
+                    while (!(mnemonic.equals("cpy") && opObj0.toString().equals("r2"))) {
+                        trackAddressOfCpy = trackAddressOfCpy.subtract(4);
+                        instruction = listing.getInstructionAt(trackAddressOfCpy);
                         mnemonic = instruction.getMnemonicString();
+                        Object[] opObjs0 = instruction.getOpObjects(0);
+                        opObj0 = opObjs0[0];
+                    }
 
-                        Object tmpOpObj0 = null;
-                        if (instruction.getNumOperands() > 0) {
-                            Object[] opObjs0 = instruction.getOpObjects(0);
-                            tmpOpObj0 = opObjs0[0];
-                        }
+                    Object[] opObjs1 = instruction.getOpObjects(1);
+                    Object opObj1 = opObjs1[0];
 
-                        while (!(mnemonic.equals("cpy") && tmpOpObj0.toString().equals("r2"))) {
-                            tmpAddr = tmpAddr.subtract(4);
-                            instruction = listing.getInstructionAt(tmpAddr);
-                            mnemonic = instruction.getMnemonicString();
-                            Object[] opObjs0 = instruction.getOpObjects(0);
-                            tmpOpObj0 = opObjs0[0];
-                        }
+                    // Identify the source register.
+                    String targetReg = opObj1.toString();
+                    additionTotal = 0;
+                    Address trackAddr = trackAddressOfCpy;
 
-                        Object[] opObjs1 = instruction.getOpObjects(1);
-                        Object opObj1 = opObjs1[0];
+                    // At this point we identified the source register.
+                    // Now we need to retreive its value.
+                    while (true) {
+                        trackAddr = trackAddr.subtract(4);
+                        Instruction trackInst = listing.getInstructionAt(trackAddr);
 
-                        String targetReg = opObj1.toString();
-                        additionTotal = 0;
-                        Address trackAddr = tmpAddr;
+                        String trackMnemonic = trackInst.getMnemonicString();
 
-                        while (true) {
-                            trackAddr = trackAddr.subtract(4);
-                            Instruction trackInst = listing.getInstructionAt(trackAddr);
+                        if (trackInst.getNumOperands() > 0) {
+                            Object[] trackOpObjs0 = trackInst.getOpObjects(0);
+                            if (trackOpObjs0[0].toString().equals(targetReg)) {
 
-                            String trackMnemonic = trackInst.getMnemonicString();
+                                if (trackMnemonic.equals("mov")) {
+                                    // We will end up here, even when tracking the value via cpy and add instructions.
+                                    // Example:
+                                    /*
+                                        00013380 07 80 a0 e3     mov        r8,#0x7
+                                        ...
+                                        000137f0 08 80 88 e2     add        r8,r8,#0x8
+                                        ...
+                                        000139f8 08 20 a0 e1     cpy        r2,r8
+                                        ...
+                                        00013a04 70 02 00 eb     bl         mw_copy                                          undefined mw_copy()
+                                     */
+                                    Scalar trackScalar = trackInst.getScalar(1);
+                                    long trackSize = trackScalar.getValue();
+                                    // Add any accumulated additions to the final size.
+                                    if (additionTotal > 0) {
+                                        trackSize += additionTotal;
 
-                            if (trackInst.getNumOperands() > 0) {
-                                Object[] trackOpObjs0 = trackInst.getOpObjects(0);
-                                if (trackOpObjs0[0].toString().equals(targetReg)) {
-
-                                    if (trackMnemonic.equals("mov")) {
-                                        Scalar trackScalar = trackInst.getScalar(1);
-                                        long trackSize = trackScalar.getValue();
-                                        // Add any accumulated additions to the final size
-                                        if (additionTotal > 0) {
-                                            trackSize += additionTotal;
-                                        }
-
-                                        mappedConfigData.put(addressOfCopiedData, new AddressSize(addressOfOrigData, trackSize));
-                                        break;
-                                    } else if (trackMnemonic.equals("cpy")) {
-                                        Object[] trackOpObjs1 = trackInst.getOpObjects(1);
-                                        targetReg = trackOpObjs1[0].toString();
-                                    } else if (trackMnemonic.equals("add")) {
-                                        if (trackInst.getNumOperands() > 2 && trackInst.getOpObjects(2)[0] instanceof Scalar) {
-                                            Scalar addValue = (Scalar) trackInst.getOpObjects(2)[0];
-                                            long value = addValue.getValue();
-                                            additionTotal += value;
-                                        } else {
-                                            Object[] trackOpObjs1 = trackInst.getOpObjects(1);
-                                            targetReg = trackOpObjs1[0].toString();
-                                        }
+                                    }
+                                    mappedConfigData.put(addressOfBssData, new AddressSize(addressOfRoData, trackSize));
+                                    break;
+                                } else if (trackMnemonic.equals("cpy")) {
+                                    // We encountered an other cpy,
+                                    // and now we need to track its source register.
+                                    Object[] trackOpObjs1 = trackInst.getOpObjects(1);
+                                    targetReg = trackOpObjs1[0].toString();
+                                } else if (trackMnemonic.equals("add")) {
+                                    // The value of the resigter we are tracking might be incremented.
+                                    // Example:
+                                    /*
+                                        00013380 07 80 a0 e3     mov        r8,#0x7
+                                        ...
+                                        000137f0 08 80 88 e2     add        r8,r8,#0x8
+                                        ...
+                                        000139f8 08 20 a0 e1     cpy        r2,r8
+                                        ...
+                                        00013a04 70 02 00 eb     bl         mw_copy                                          undefined mw_copy()
+                                     */
+                                    if (trackInst.getNumOperands() > 2 && trackInst.getOpObjects(2)[0] instanceof Scalar) {
+                                        Scalar addValue = (Scalar) trackInst.getOpObjects(2)[0];
+                                        long value = addValue.getValue();
+                                        additionTotal += value;
                                     }
                                 }
                             }
-                            if (trackMnemonic.equals("stmdb")) {
-                                println("error: prologue reached while tracking cpy registers");
-                                return null;
-                            }
                         }
-                        break;
-
+                        if (trackMnemonic.equals("stmdb")) {
+                            println("fatal error: prologue reached while tracking cpy registers");
+                            return null;
+                        }
                     }
+                    // We found the size, lets break and continue with the next reference.
+                    break;
                 }
             }
         }

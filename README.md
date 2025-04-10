@@ -599,6 +599,7 @@ MiraiConfigExtractorSORA.java> located config address: 00020e64
 MiraiConfigExtractorSORA.java> located copy function: mw_copy
 MiraiConfigExtractorSORA.java> located 75 referenced config blocks
 MiraiConfigExtractorSORA.java> located 99 total config blocks
+MiraiConfigExtractorSORA.java> referenced config blocks (.bss address - config ID - .rodata address - string (hex bytes)):
 MiraiConfigExtractorSORA.java> 000210b4 - 0000004a - 00018098 - 5.........LV....[.....v (35 19 18 18 13 15 02 1F 19 18 4C 56 1D 13 13 06 5B 17 1A 1F 00 13 76)
 MiraiConfigExtractorSORA.java> 000210bc - 0000004b - 000180b0 - 7.....LV....Y....Z...........Y.....]...Z...........Y...M.KFXOZ.....Y....Z\Y\M.KFXNv (37 15 15 13 06 02 4C 56 02 13 0E 02 59 1E 02 1B 1A 5A 17 06 06 1A 1F 15 17 02 1F 19 18 59 0E 1E 02 1B 1A 5D 0E 1B 1A 5A 17 06 06 1A 1F 15 17 02 1F 19 18 59 0E 1B 1A 4D 07 4B 46 58 4F 5A 1F 1B 17 11 13 59 01 13 14 06 5A 5C 59 5C 4D 07 4B 46 58 4E 76)
 MiraiConfigExtractorSORA.java> 000210c4 - 0000004c - 00018104 - 7.....[:.......LV..[#%Z..M.KFXNv (37 15 15 13 06 02 5B 3A 17 18 11 03 17 11 13 4C 56 13 18 5B 23 25 5A 13 18 4D 07 4B 46 58 4E 76)
