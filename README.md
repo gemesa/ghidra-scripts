@@ -598,16 +598,13 @@ MiraiConfigExtractorSORA.java> Running...
 MiraiConfigExtractorSORA.java> located decryption function: mw_encrypt_with_key
 MiraiConfigExtractorSORA.java> located config address: 00020e64
 MiraiConfigExtractorSORA.java> located copy function: mw_copy
-MiraiConfigExtractorSORA.java> located 75 referenced config blocks
+MiraiConfigExtractorSORA.java> located 65 referenced config blocks
 MiraiConfigExtractorSORA.java> located 99 total config blocks
 MiraiConfigExtractorSORA.java> referenced config blocks (.bss address - config ID - .rodata address - string (hex bytes)):
 MiraiConfigExtractorSORA.java> 000210b4 - 0000004a - 00018098 - 5.........LV....[.....v (35 19 18 18 13 15 02 1F 19 18 4C 56 1D 13 13 06 5B 17 1A 1F 00 13 76)
 MiraiConfigExtractorSORA.java> 000210bc - 0000004b - 000180b0 - 7.....LV....Y....Z...........Y.....]...Z...........Y...M.KFXOZ.....Y....Z\Y\M.KFXNv (37 15 15 13 06 02 4C 56 02 13 0E 02 59 1E 02 1B 1A 5A 17 06 06 1A 1F 15 17 02 1F 19 18 59 0E 1E 02 1B 1A 5D 0E 1B 1A 5A 17 06 06 1A 1F 15 17 02 1F 19 18 59 0E 1B 1A 4D 07 4B 46 58 4F 5A 1F 1B 17 11 13 59 01 13 14 06 5A 5C 59 5C 4D 07 4B 46 58 4E 76)
 MiraiConfigExtractorSORA.java> 000210c4 - 0000004c - 00018104 - 7.....[:.......LV..[#%Z..M.KFXNv (37 15 15 13 06 02 5B 3A 17 18 11 03 17 11 13 4C 56 13 18 5B 23 25 5A 13 18 4D 07 4B 46 58 4E 76)
 MiraiConfigExtractorSORA.java> 000210cc - 0000004d - 00018128 - 5......["...LV...........Y.[...[....[..........v (35 19 18 02 13 18 02 5B 22 0F 06 13 4C 56 17 06 06 1A 1F 15 17 02 1F 19 18 59 0E 5B 01 01 01 5B 10 19 04 1B 5B 03 04 1A 13 18 15 19 12 13 12 76)
-MiraiConfigExtractorSORA.java> 00020ecc - 0000000d - 00017d78 - /proc/. (2F 70 72 6F 63 2F 00)
-MiraiConfigExtractorSORA.java> 00020ed4 - 0000000e - 00017d80 - /exe. (2F 65 78 65 00)
-MiraiConfigExtractorSORA.java> 00020ecc - 0000000d - 00017d78 - /proc/. (2F 70 72 6F 63 2F 00)
 MiraiConfigExtractorSORA.java> 00020ecc - 0000000d - 00017d78 - /proc/. (2F 70 72 6F 63 2F 00)
 MiraiConfigExtractorSORA.java> 00020ed4 - 0000000e - 00017d80 - /exe. (2F 65 78 65 00)
 MiraiConfigExtractorSORA.java> 00020f54 - 0000001e - 00017dbc - .anime. (2E 61 6E 69 6D 65 00)
@@ -657,18 +654,11 @@ MiraiConfigExtractorSORA.java> 0002118c - 00000065 - 000186e0 - ;......YCXFV^;..
 MiraiConfigExtractorSORA.java> 00021194 - 00000066 - 00018734 - ;......YCXFV^;........MV?....V;..V9%V.VGF)GFMV..LEEXF_V1....YDFGFFGFGV0......YEEXFv (3B 19 0C 1F 1A 1A 17 59 43 58 46 56 5E 3B 17 15 1F 18 02 19 05 1E 4D 56 3F 18 02 13 1A 56 3B 17 15 56 39 25 56 2E 56 47 46 29 47 46 4D 56 04 00 4C 45 45 58 46 5F 56 31 13 15 1D 19 59 44 46 47 46 46 47 46 47 56 30 1F 04 13 10 19 0E 59 45 45 58 46 76)
 MiraiConfigExtractorSORA.java> 00020f34 - 0000001a - 00017e38 - ogin. (6F 67 69 6E 00)
 MiraiConfigExtractorSORA.java> 00020f3c - 0000001b - 00017e40 - enter. (65 6E 74 65 72 00)
-MiraiConfigExtractorSORA.java> 00020f34 - 0000001a - 00017e38 - ogin. (6F 67 69 6E 00)
-MiraiConfigExtractorSORA.java> 00020f3c - 0000001b - 00017e40 - enter. (65 6E 74 65 72 00)
-MiraiConfigExtractorSORA.java> 00020f34 - 0000001a - 00017e38 - ogin. (6F 67 69 6E 00)
-MiraiConfigExtractorSORA.java> 00020f3c - 0000001b - 00017e40 - enter. (65 6E 74 65 72 00)
-MiraiConfigExtractorSORA.java> 00020f2c - 00000019 - 00017e2c - pbbf~cu. (70 62 62 66 7E 63 75 11)
-MiraiConfigExtractorSORA.java> 00020f2c - 00000019 - 00017e2c - pbbf~cu. (70 62 62 66 7E 63 75 11)
 MiraiConfigExtractorSORA.java> 00020f2c - 00000019 - 00017e2c - pbbf~cu. (70 62 62 66 7E 63 75 11)
 MiraiConfigExtractorSORA.java> 00020e8c - 00000005 - 00017d00 - enable. (65 6E 61 62 6C 65 00)
 MiraiConfigExtractorSORA.java> 00020e94 - 00000006 - 00017d08 - system. (73 79 73 74 65 6D 00)
 MiraiConfigExtractorSORA.java> 00020e9c - 00000007 - 00017d10 - sh. (73 68 00)
 MiraiConfigExtractorSORA.java> 00020e84 - 00000004 - 00017cf8 - shell. (73 68 65 6C 6C 00)
-MiraiConfigExtractorSORA.java> 00020eb4 - 0000000a - 00017d40 - ncorrect. (6E 63 6F 72 72 65 63 74 00)
 MiraiConfigExtractorSORA.java> 00020eb4 - 0000000a - 00017d40 - ncorrect. (6E 63 6F 72 72 65 63 74 00)
 MiraiConfigExtractorSORA.java> 00020eac - 00000009 - 00017d28 - SORA: applet not found. (53 4F 52 41 3A 20 61 70 70 6C 65 74 20 6E 6F 74 20 66 6F 75 6E 64 00)
 MiraiConfigExtractorSORA.java> 00020ea4 - 00000008 - 00017d14 - /bin/busybox SORA. (2F 62 69 6E 2F 62 75 73 79 62 6F 78 20 53 4F 52 41 00)
@@ -690,16 +680,13 @@ MiraiConfigExtractorSORA.java> Running...
 MiraiConfigExtractorSORA.java> located decryption function: mw_encrypt_with_key
 MiraiConfigExtractorSORA.java> located config address: 00020e64
 MiraiConfigExtractorSORA.java> located copy function: mw_copy
-MiraiConfigExtractorSORA.java> located 75 referenced config blocks
+MiraiConfigExtractorSORA.java> located 65 referenced config blocks
 MiraiConfigExtractorSORA.java> located 99 total config blocks
 MiraiConfigExtractorSORA.java> referenced config blocks (.bss address - config ID - .rodata address - string (hex bytes)):
 MiraiConfigExtractorSORA.java> 000210b4 - 0000004a - 00018098 - Connection: keep-alive. (43 6F 6E 6E 65 63 74 69 6F 6E 3A 20 6B 65 65 70 2D 61 6C 69 76 65 00)
 MiraiConfigExtractorSORA.java> 000210bc - 0000004b - 000180b0 - Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8. (41 63 63 65 70 74 3A 20 74 65 78 74 2F 68 74 6D 6C 2C 61 70 70 6C 69 63 61 74 69 6F 6E 2F 78 68 74 6D 6C 2B 78 6D 6C 2C 61 70 70 6C 69 63 61 74 69 6F 6E 2F 78 6D 6C 3B 71 3D 30 2E 39 2C 69 6D 61 67 65 2F 77 65 62 70 2C 2A 2F 2A 3B 71 3D 30 2E 38 00)
 MiraiConfigExtractorSORA.java> 000210c4 - 0000004c - 00018104 - Accept-Language: en-US,en;q=0.8. (41 63 63 65 70 74 2D 4C 61 6E 67 75 61 67 65 3A 20 65 6E 2D 55 53 2C 65 6E 3B 71 3D 30 2E 38 00)
 MiraiConfigExtractorSORA.java> 000210cc - 0000004d - 00018128 - Content-Type: application/x-www-form-urlencoded. (43 6F 6E 74 65 6E 74 2D 54 79 70 65 3A 20 61 70 70 6C 69 63 61 74 69 6F 6E 2F 78 2D 77 77 77 2D 66 6F 72 6D 2D 75 72 6C 65 6E 63 6F 64 65 64 00)
-MiraiConfigExtractorSORA.java> 00020ecc - 0000000d - 00017d78 - Y....Yv (59 06 04 19 15 59 76)
-MiraiConfigExtractorSORA.java> 00020ed4 - 0000000e - 00017d80 - Y...v (59 13 0E 13 76)
-MiraiConfigExtractorSORA.java> 00020ecc - 0000000d - 00017d78 - Y....Yv (59 06 04 19 15 59 76)
 MiraiConfigExtractorSORA.java> 00020ecc - 0000000d - 00017d78 - Y....Yv (59 06 04 19 15 59 76)
 MiraiConfigExtractorSORA.java> 00020ed4 - 0000000e - 00017d80 - Y...v (59 13 0E 13 76)
 MiraiConfigExtractorSORA.java> 00020f54 - 0000001e - 00017dbc - X.....v (58 17 18 1F 1B 13 76)
@@ -749,18 +736,11 @@ MiraiConfigExtractorSORA.java> 0002118c - 00000065 - 000186e0 - Mozilla/5.0 (Mac
 MiraiConfigExtractorSORA.java> 00021194 - 00000066 - 00018734 - Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10; rv:33.0) Gecko/20100101 Firefox/33.0. (4D 6F 7A 69 6C 6C 61 2F 35 2E 30 20 28 4D 61 63 69 6E 74 6F 73 68 3B 20 49 6E 74 65 6C 20 4D 61 63 20 4F 53 20 58 20 31 30 5F 31 30 3B 20 72 76 3A 33 33 2E 30 29 20 47 65 63 6B 6F 2F 32 30 31 30 30 31 30 31 20 46 69 72 65 66 6F 78 2F 33 33 2E 30 00)
 MiraiConfigExtractorSORA.java> 00020f34 - 0000001a - 00017e38 - ....v (19 11 1F 18 76)
 MiraiConfigExtractorSORA.java> 00020f3c - 0000001b - 00017e40 - .....v (13 18 02 13 04 76)
-MiraiConfigExtractorSORA.java> 00020f34 - 0000001a - 00017e38 - ....v (19 11 1F 18 76)
-MiraiConfigExtractorSORA.java> 00020f3c - 0000001b - 00017e40 - .....v (13 18 02 13 04 76)
-MiraiConfigExtractorSORA.java> 00020f34 - 0000001a - 00017e38 - ....v (19 11 1F 18 76)
-MiraiConfigExtractorSORA.java> 00020f3c - 0000001b - 00017e40 - .....v (13 18 02 13 04 76)
-MiraiConfigExtractorSORA.java> 00020f2c - 00000019 - 00017e2c - .......g (06 14 14 10 08 15 03 67)
-MiraiConfigExtractorSORA.java> 00020f2c - 00000019 - 00017e2c - .......g (06 14 14 10 08 15 03 67)
 MiraiConfigExtractorSORA.java> 00020f2c - 00000019 - 00017e2c - .......g (06 14 14 10 08 15 03 67)
 MiraiConfigExtractorSORA.java> 00020e8c - 00000005 - 00017d00 - ......v (13 18 17 14 1A 13 76)
 MiraiConfigExtractorSORA.java> 00020e94 - 00000006 - 00017d08 - ......v (05 0F 05 02 13 1B 76)
 MiraiConfigExtractorSORA.java> 00020e9c - 00000007 - 00017d10 - ..v (05 1E 76)
 MiraiConfigExtractorSORA.java> 00020e84 - 00000004 - 00017cf8 - .....v (05 1E 13 1A 1A 76)
-MiraiConfigExtractorSORA.java> 00020eb4 - 0000000a - 00017d40 - ........v (18 15 19 04 04 13 15 02 76)
 MiraiConfigExtractorSORA.java> 00020eb4 - 0000000a - 00017d40 - ........v (18 15 19 04 04 13 15 02 76)
 MiraiConfigExtractorSORA.java> 00020eac - 00000009 - 00017d28 - %9$7LV......V...V.....v (25 39 24 37 4C 56 17 06 06 1A 13 02 56 18 19 02 56 10 19 03 18 12 76)
 MiraiConfigExtractorSORA.java> 00020ea4 - 00000008 - 00017d14 - Y...Y.......V%9$7v (59 14 1F 18 59 14 03 05 0F 14 19 0E 56 25 39 24 37 76)

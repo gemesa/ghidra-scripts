@@ -4,6 +4,7 @@
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.List;
 
 import ghidra.app.script.GhidraScript;
@@ -106,6 +107,9 @@ public class MiraiConfigExtractorSORA extends GhidraScript {
         println("located copy function: " + targetFunctionCopy.getName());
 
         List<Address> referencedConfigAddressList = locateReferencedConfigAddresses(targetFunctionDecrypt, configAddress);
+
+        // Remove duplicates while preserving order.
+        referencedConfigAddressList = new ArrayList<>(new LinkedHashSet<>(referencedConfigAddressList));
 
         println("located " + referencedConfigAddressList.size() + " referenced config blocks");
 
