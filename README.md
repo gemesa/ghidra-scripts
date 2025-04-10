@@ -680,3 +680,93 @@ MiraiConfigExtractorSORA.java> Finished!
 ```
 
 </details>
+
+<details>
+
+<summary><code>MiraiConfigExtractorSORA.log</code></summary>
+
+```
+MiraiConfigExtractorSORA.java> Running...
+MiraiConfigExtractorSORA.java> located decryption function: mw_encrypt_with_key
+MiraiConfigExtractorSORA.java> located config address: 00020e64
+MiraiConfigExtractorSORA.java> located copy function: mw_copy
+MiraiConfigExtractorSORA.java> located 75 referenced config blocks
+MiraiConfigExtractorSORA.java> located 99 total config blocks
+MiraiConfigExtractorSORA.java> referenced config blocks (.bss address - config ID - .rodata address - string (hex bytes)):
+MiraiConfigExtractorSORA.java> 000210b4 - 0000004a - 00018098 - Connection: keep-alive. (43 6F 6E 6E 65 63 74 69 6F 6E 3A 20 6B 65 65 70 2D 61 6C 69 76 65 00)
+MiraiConfigExtractorSORA.java> 000210bc - 0000004b - 000180b0 - Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8. (41 63 63 65 70 74 3A 20 74 65 78 74 2F 68 74 6D 6C 2C 61 70 70 6C 69 63 61 74 69 6F 6E 2F 78 68 74 6D 6C 2B 78 6D 6C 2C 61 70 70 6C 69 63 61 74 69 6F 6E 2F 78 6D 6C 3B 71 3D 30 2E 39 2C 69 6D 61 67 65 2F 77 65 62 70 2C 2A 2F 2A 3B 71 3D 30 2E 38 00)
+MiraiConfigExtractorSORA.java> 000210c4 - 0000004c - 00018104 - Accept-Language: en-US,en;q=0.8. (41 63 63 65 70 74 2D 4C 61 6E 67 75 61 67 65 3A 20 65 6E 2D 55 53 2C 65 6E 3B 71 3D 30 2E 38 00)
+MiraiConfigExtractorSORA.java> 000210cc - 0000004d - 00018128 - Content-Type: application/x-www-form-urlencoded. (43 6F 6E 74 65 6E 74 2D 54 79 70 65 3A 20 61 70 70 6C 69 63 61 74 69 6F 6E 2F 78 2D 77 77 77 2D 66 6F 72 6D 2D 75 72 6C 65 6E 63 6F 64 65 64 00)
+MiraiConfigExtractorSORA.java> 00020ecc - 0000000d - 00017d78 - Y....Yv (59 06 04 19 15 59 76)
+MiraiConfigExtractorSORA.java> 00020ed4 - 0000000e - 00017d80 - Y...v (59 13 0E 13 76)
+MiraiConfigExtractorSORA.java> 00020ecc - 0000000d - 00017d78 - Y....Yv (59 06 04 19 15 59 76)
+MiraiConfigExtractorSORA.java> 00020ecc - 0000000d - 00017d78 - Y....Yv (59 06 04 19 15 59 76)
+MiraiConfigExtractorSORA.java> 00020ed4 - 0000000e - 00017d80 - Y...v (59 13 0E 13 76)
+MiraiConfigExtractorSORA.java> 00020f54 - 0000001e - 00017dbc - X.....v (58 17 18 1F 1B 13 76)
+MiraiConfigExtractorSORA.java> 00020f64 - 00000020 - 00017e60 - dvrHelper. (64 76 72 48 65 6C 70 65 72 00)
+MiraiConfigExtractorSORA.java> 00020f6c - 00000021 - 00017e6c - <censored>
+MiraiConfigExtractorSORA.java> 00020f74 - 00000022 - 00017e78 - 1337SoraLOADER. (31 33 33 37 53 6F 72 61 4C 4F 41 44 45 52 00)
+MiraiConfigExtractorSORA.java> 00020f7c - 00000023 - 00017e88 - <censored>
+MiraiConfigExtractorSORA.java> 00020f84 - 00000024 - 00017e9c - X19I239124UIU. (58 31 39 49 32 33 39 31 32 34 55 49 55 00)
+MiraiConfigExtractorSORA.java> 00020f8c - 00000025 - 00017eac - IuYgujeIqn."14Fa. (49 75 59 67 75 6A 65 49 71 6E 00 22 31 34 46 61 00)
+MiraiConfigExtractorSORA.java> 00020f94 - 00000026 - 00017eb8 - 14Fa. (31 34 46 61 00)
+MiraiConfigExtractorSORA.java> 00020f9c - 00000027 - 00017ec0 - ccAD. (63 63 41 44 00)
+MiraiConfigExtractorSORA.java> 00020fb4 - 0000002a - 00017ec8 - /proc/net/route. (2F 70 72 6F 63 2F 6E 65 74 2F 72 6F 75 74 65 00)
+MiraiConfigExtractorSORA.java> 00020fbc - 0000002b - 00017edc - /proc/cpuinfo. (2F 70 72 6F 63 2F 63 70 75 69 6E 66 6F 00)
+MiraiConfigExtractorSORA.java> 00020fc4 - 0000002c - 00017eec - BOGOMIPS. (42 4F 47 4F 4D 49 50 53 00)
+MiraiConfigExtractorSORA.java> 00020fcc - 0000002d - 00017ef8 - /etc/rc.d/rc.local. (2F 65 74 63 2F 72 63 2E 64 2F 72 63 2E 6C 6F 63 61 6C 00)
+MiraiConfigExtractorSORA.java> 00020fd4 - 0000002e - 00017f0c - g1abc4dmo35hnp2lie0kjf. (67 31 61 62 63 34 64 6D 6F 33 35 68 6E 70 32 6C 69 65 30 6B 6A 66 00)
+MiraiConfigExtractorSORA.java> 00020fdc - 0000002f - 00017f24 - /dev/watchdog. (2F 64 65 76 2F 77 61 74 63 68 64 6F 67 00)
+MiraiConfigExtractorSORA.java> 00020fe4 - 00000030 - 00017f34 - /dev/misc/watchdog. (2F 64 65 76 2F 6D 69 73 63 2F 77 61 74 63 68 64 6F 67 00)
+MiraiConfigExtractorSORA.java> 00020fec - 00000031 - 00017f48 - /dev/FTWDT101_watchdog. (2F 64 65 76 2F 46 54 57 44 54 31 30 31 5F 77 61 74 63 68 64 6F 67 00)
+MiraiConfigExtractorSORA.java> 00020ff4 - 00000032 - 00017f60 - /dev/netslink/. (2F 64 65 76 2F 6E 65 74 73 6C 69 6E 6B 2F 00)
+MiraiConfigExtractorSORA.java> 00020ffc - 00000033 - 00017f70 - PRIVMSG. (50 52 49 56 4D 53 47 00)
+MiraiConfigExtractorSORA.java> 00021004 - 00000034 - 00017f7c - GETLOCALIP."KILLA (47 45 54 4C 4F 43 41 4C 49 50 00 22 4B 49 4C 4C 41)
+MiraiConfigExtractorSORA.java> 0002100c - 00000035 - 00017f88 - KILLATTK. (4B 49 4C 4C 41 54 54 4B 00)
+MiraiConfigExtractorSORA.java> 00021014 - 00000036 - 00017f94 - Eats8. (45 61 74 73 38 00)
+MiraiConfigExtractorSORA.java> 0002101c - 00000037 - 00017f9c - v[0v. (76 5B 30 76 00)
+MiraiConfigExtractorSORA.java> 0002102c - 00000039 - 00017fa4 - 93OfjHZ2z. (39 33 4F 66 6A 48 5A 32 7A 00)
+MiraiConfigExtractorSORA.java> 0002103c - 0000003b - 00017fc4 - WsGA4@F6F. (57 73 47 41 34 40 46 36 46 00)
+MiraiConfigExtractorSORA.java> 00021044 - 0000003c - 00017fd0 - ACDB. (41 43 44 42 00)
+MiraiConfigExtractorSORA.java> 0002104c - 0000003d - 00017fd8 - AbAd. (41 62 41 64 00)
+MiraiConfigExtractorSORA.java> 00021054 - 0000003e - 00017fe0 - iaGv. (69 61 47 76 00)
+MiraiConfigExtractorSORA.java> 00021034 - 0000003a - 00017fb0 - GhostWuzHere666 (47 68 6F 73 74 57 75 7A 48 65 72 65 36 36 36)
+MiraiConfigExtractorSORA.java> 00020f44 - 0000001c - 00017e48 - G...B....CE...GD..F...v (47 11 14 17 42 15 12 19 1B 43 45 18 1E 06 47 44 13 1F 46 1D 10 1C 76)
+MiraiConfigExtractorSORA.java> 0002119c - 00000067 - 00018788 - Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/62.0.3202.94. (4D 6F 7A 69 6C 6C 61 2F 35 2E 30 20 28 57 69 6E 64 6F 77 73 20 4E 54 20 31 30 2E 30 3B 20 57 69 6E 36 34 3B 20 78 36 34 29 20 41 70 70 6C 65 57 65 62 4B 69 74 2F 35 33 37 2E 33 36 20 28 4B 48 54 4D 4C 2C 20 6C 69 6B 65 20 47 65 63 6B 6F 29 20 43 68 72 6F 6D 65 2F 36 32 2E 30 2E 33 32 30 32 2E 39 34 00)
+MiraiConfigExtractorSORA.java> 0002112c - 00000059 - 00018208 - Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.103 Safari/537.36. (4D 6F 7A 69 6C 6C 61 2F 35 2E 30 20 28 57 69 6E 64 6F 77 73 20 4E 54 20 31 30 2E 30 3B 20 57 4F 57 36 34 29 20 41 70 70 6C 65 57 65 62 4B 69 74 2F 35 33 37 2E 33 36 20 28 4B 48 54 4D 4C 2C 20 6C 69 6B 65 20 47 65 63 6B 6F 29 20 43 68 72 6F 6D 65 2F 35 31 2E 30 2E 32 37 30 34 2E 31 30 33 20 53 61 66 61 72 69 2F 35 33 37 2E 33 36 00)
+MiraiConfigExtractorSORA.java> 00021134 - 0000005a - 00018278 - Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/52.0.2743.116 Safari/537.36. (4D 6F 7A 69 6C 6C 61 2F 35 2E 30 20 28 57 69 6E 64 6F 77 73 20 4E 54 20 31 30 2E 30 3B 20 57 4F 57 36 34 29 20 41 70 70 6C 65 57 65 62 4B 69 74 2F 35 33 37 2E 33 36 20 28 4B 48 54 4D 4C 2C 20 6C 69 6B 65 20 47 65 63 6B 6F 29 20 43 68 72 6F 6D 65 2F 35 32 2E 30 2E 32 37 34 33 2E 31 31 36 20 53 61 66 61 72 69 2F 35 33 37 2E 33 36 00)
+MiraiConfigExtractorSORA.java> 0002113c - 0000005b - 000182e8 - Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.103 Safari/537.36." (4D 6F 7A 69 6C 6C 61 2F 35 2E 30 20 28 57 69 6E 64 6F 77 73 20 4E 54 20 36 2E 31 3B 20 57 4F 57 36 34 29 20 41 70 70 6C 65 57 65 62 4B 69 74 2F 35 33 37 2E 33 36 20 28 4B 48 54 4D 4C 2C 20 6C 69 6B 65 20 47 65 63 6B 6F 29 20 43 68 72 6F 6D 65 2F 35 31 2E 30 2E 32 37 30 34 2E 31 30 33 20 53 61 66 61 72 69 2F 35 33 37 2E 33 36 00 22)
+MiraiConfigExtractorSORA.java> 00021144 - 0000005c - 00018358 - Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/52.0.2743.116 Safari/537.36." (4D 6F 7A 69 6C 6C 61 2F 35 2E 30 20 28 57 69 6E 64 6F 77 73 20 4E 54 20 36 2E 31 3B 20 57 4F 57 36 34 29 20 41 70 70 6C 65 57 65 62 4B 69 74 2F 35 33 37 2E 33 36 20 28 4B 48 54 4D 4C 2C 20 6C 69 6B 65 20 47 65 63 6B 6F 29 20 43 68 72 6F 6D 65 2F 35 32 2E 30 2E 32 37 34 33 2E 31 31 36 20 53 61 66 61 72 69 2F 35 33 37 2E 33 36 00 22)
+MiraiConfigExtractorSORA.java> 0002114c - 0000005d - 000183c8 - Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_6) AppleWebKit/601.7.7 (KHTML, like Gecko) Version/9.1.2 Safari/601.7.7. (4D 6F 7A 69 6C 6C 61 2F 35 2E 30 20 28 4D 61 63 69 6E 74 6F 73 68 3B 20 49 6E 74 65 6C 20 4D 61 63 20 4F 53 20 58 20 31 30 5F 31 31 5F 36 29 20 41 70 70 6C 65 57 65 62 4B 69 74 2F 36 30 31 2E 37 2E 37 20 28 4B 48 54 4D 4C 2C 20 6C 69 6B 65 20 47 65 63 6B 6F 29 20 56 65 72 73 69 6F 6E 2F 39 2E 31 2E 32 20 53 61 66 61 72 69 2F 36 30 31 2E 37 2E 37 00)
+MiraiConfigExtractorSORA.java> 00021154 - 0000005e - 00018440 - Mozilla/4.0 (compatible; MSIE 9.0; Windows NT 5.1; Trident/5.0). (4D 6F 7A 69 6C 6C 61 2F 34 2E 30 20 28 63 6F 6D 70 61 74 69 62 6C 65 3B 20 4D 53 49 45 20 39 2E 30 3B 20 57 69 6E 64 6F 77 73 20 4E 54 20 35 2E 31 3B 20 54 72 69 64 65 6E 74 2F 35 2E 30 29 00)
+MiraiConfigExtractorSORA.java> 0002115c - 0000005f - 00018484 - Mozilla/4.0 (compatible; MSIE 9.0; Windows NT 6.0; Trident/4.0; GTB7.4; InfoPath.3; SV1; .NET CLR 3.4.53360; WOW64; en-US). (4D 6F 7A 69 6C 6C 61 2F 34 2E 30 20 28 63 6F 6D 70 61 74 69 62 6C 65 3B 20 4D 53 49 45 20 39 2E 30 3B 20 57 69 6E 64 6F 77 73 20 4E 54 20 36 2E 30 3B 20 54 72 69 64 65 6E 74 2F 34 2E 30 3B 20 47 54 42 37 2E 34 3B 20 49 6E 66 6F 50 61 74 68 2E 33 3B 20 53 56 31 3B 20 2E 4E 45 54 20 43 4C 52 20 33 2E 34 2E 35 33 33 36 30 3B 20 57 4F 57 36 34 3B 20 65 6E 2D 55 53 29 00)
+MiraiConfigExtractorSORA.java> 00021164 - 00000060 - 00018500 - Mozilla/4.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/4.0; FDM; MSIECrawler; Media Center PC 5.0). (4D 6F 7A 69 6C 6C 61 2F 34 2E 30 20 28 63 6F 6D 70 61 74 69 62 6C 65 3B 20 4D 53 49 45 20 39 2E 30 3B 20 57 69 6E 64 6F 77 73 20 4E 54 20 36 2E 31 3B 20 54 72 69 64 65 6E 74 2F 34 2E 30 3B 20 46 44 4D 3B 20 4D 53 49 45 43 72 61 77 6C 65 72 3B 20 4D 65 64 69 61 20 43 65 6E 74 65 72 20 50 43 20 35 2E 30 29 00)
+MiraiConfigExtractorSORA.java> 0002116c - 00000061 - 00018568 - Mozilla/4.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/4.0; GTB7.4; InfoPath.2; SV1; .NET CLR 4.4.58799; WOW64; en-US). (4D 6F 7A 69 6C 6C 61 2F 34 2E 30 20 28 63 6F 6D 70 61 74 69 62 6C 65 3B 20 4D 53 49 45 20 39 2E 30 3B 20 57 69 6E 64 6F 77 73 20 4E 54 20 36 2E 31 3B 20 54 72 69 64 65 6E 74 2F 34 2E 30 3B 20 47 54 42 37 2E 34 3B 20 49 6E 66 6F 50 61 74 68 2E 32 3B 20 53 56 31 3B 20 2E 4E 45 54 20 43 4C 52 20 34 2E 34 2E 35 38 37 39 39 3B 20 57 4F 57 36 34 3B 20 65 6E 2D 55 53 29 00)
+MiraiConfigExtractorSORA.java> 00021174 - 00000062 - 000185e4 - Mozilla/4.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0; FunWebProducts). (4D 6F 7A 69 6C 6C 61 2F 34 2E 30 20 28 63 6F 6D 70 61 74 69 62 6C 65 3B 20 4D 53 49 45 20 39 2E 30 3B 20 57 69 6E 64 6F 77 73 20 4E 54 20 36 2E 31 3B 20 54 72 69 64 65 6E 74 2F 35 2E 30 3B 20 46 75 6E 57 65 62 50 72 6F 64 75 63 74 73 29 00)
+MiraiConfigExtractorSORA.java> 0002117c - 00000063 - 00018638 - Mozilla/5.0 (Macintosh; Intel Mac OS X 10.6; rv:25.0) Gecko/20100101 Firefox/25.0. (4D 6F 7A 69 6C 6C 61 2F 35 2E 30 20 28 4D 61 63 69 6E 74 6F 73 68 3B 20 49 6E 74 65 6C 20 4D 61 63 20 4F 53 20 58 20 31 30 2E 36 3B 20 72 76 3A 32 35 2E 30 29 20 47 65 63 6B 6F 2F 32 30 31 30 30 31 30 31 20 46 69 72 65 66 6F 78 2F 32 35 2E 30 00)
+MiraiConfigExtractorSORA.java> 00021184 - 00000064 - 0001868c - Mozilla/5.0 (Macintosh; Intel Mac OS X 10.8; rv:21.0) Gecko/20100101 Firefox/21.0. (4D 6F 7A 69 6C 6C 61 2F 35 2E 30 20 28 4D 61 63 69 6E 74 6F 73 68 3B 20 49 6E 74 65 6C 20 4D 61 63 20 4F 53 20 58 20 31 30 2E 38 3B 20 72 76 3A 32 31 2E 30 29 20 47 65 63 6B 6F 2F 32 30 31 30 30 31 30 31 20 46 69 72 65 66 6F 78 2F 32 31 2E 30 00)
+MiraiConfigExtractorSORA.java> 0002118c - 00000065 - 000186e0 - Mozilla/5.0 (Macintosh; Intel Mac OS X 10.8; rv:24.0) Gecko/20100101 Firefox/24.0. (4D 6F 7A 69 6C 6C 61 2F 35 2E 30 20 28 4D 61 63 69 6E 74 6F 73 68 3B 20 49 6E 74 65 6C 20 4D 61 63 20 4F 53 20 58 20 31 30 2E 38 3B 20 72 76 3A 32 34 2E 30 29 20 47 65 63 6B 6F 2F 32 30 31 30 30 31 30 31 20 46 69 72 65 66 6F 78 2F 32 34 2E 30 00)
+MiraiConfigExtractorSORA.java> 00021194 - 00000066 - 00018734 - Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10; rv:33.0) Gecko/20100101 Firefox/33.0. (4D 6F 7A 69 6C 6C 61 2F 35 2E 30 20 28 4D 61 63 69 6E 74 6F 73 68 3B 20 49 6E 74 65 6C 20 4D 61 63 20 4F 53 20 58 20 31 30 5F 31 30 3B 20 72 76 3A 33 33 2E 30 29 20 47 65 63 6B 6F 2F 32 30 31 30 30 31 30 31 20 46 69 72 65 66 6F 78 2F 33 33 2E 30 00)
+MiraiConfigExtractorSORA.java> 00020f34 - 0000001a - 00017e38 - ....v (19 11 1F 18 76)
+MiraiConfigExtractorSORA.java> 00020f3c - 0000001b - 00017e40 - .....v (13 18 02 13 04 76)
+MiraiConfigExtractorSORA.java> 00020f34 - 0000001a - 00017e38 - ....v (19 11 1F 18 76)
+MiraiConfigExtractorSORA.java> 00020f3c - 0000001b - 00017e40 - .....v (13 18 02 13 04 76)
+MiraiConfigExtractorSORA.java> 00020f34 - 0000001a - 00017e38 - ....v (19 11 1F 18 76)
+MiraiConfigExtractorSORA.java> 00020f3c - 0000001b - 00017e40 - .....v (13 18 02 13 04 76)
+MiraiConfigExtractorSORA.java> 00020f2c - 00000019 - 00017e2c - .......g (06 14 14 10 08 15 03 67)
+MiraiConfigExtractorSORA.java> 00020f2c - 00000019 - 00017e2c - .......g (06 14 14 10 08 15 03 67)
+MiraiConfigExtractorSORA.java> 00020f2c - 00000019 - 00017e2c - .......g (06 14 14 10 08 15 03 67)
+MiraiConfigExtractorSORA.java> 00020e8c - 00000005 - 00017d00 - ......v (13 18 17 14 1A 13 76)
+MiraiConfigExtractorSORA.java> 00020e94 - 00000006 - 00017d08 - ......v (05 0F 05 02 13 1B 76)
+MiraiConfigExtractorSORA.java> 00020e9c - 00000007 - 00017d10 - ..v (05 1E 76)
+MiraiConfigExtractorSORA.java> 00020e84 - 00000004 - 00017cf8 - .....v (05 1E 13 1A 1A 76)
+MiraiConfigExtractorSORA.java> 00020eb4 - 0000000a - 00017d40 - ........v (18 15 19 04 04 13 15 02 76)
+MiraiConfigExtractorSORA.java> 00020eb4 - 0000000a - 00017d40 - ........v (18 15 19 04 04 13 15 02 76)
+MiraiConfigExtractorSORA.java> 00020eac - 00000009 - 00017d28 - %9$7LV......V...V.....v (25 39 24 37 4C 56 17 06 06 1A 13 02 56 18 19 02 56 10 19 03 18 12 76)
+MiraiConfigExtractorSORA.java> 00020ea4 - 00000008 - 00017d14 - Y...Y.......V%9$7v (59 14 1F 18 59 14 03 05 0F 14 19 0E 56 25 39 24 37 76)
+MiraiConfigExtractorSORA.java> 00020e7c - 00000003 - 000187f0 - 5........V".V585v (35 19 18 18 13 15 02 13 12 56 22 19 56 35 38 35 76)
+MiraiConfigExtractorSORA.java> 00020f1c - 00000017 - 00017e08 - Y...Y........v (59 12 13 00 59 01 17 02 15 1E 12 19 11 76)
+MiraiConfigExtractorSORA.java> 00020f24 - 00000018 - 00017e18 - Y...Y....Y........v (59 12 13 00 59 1B 1F 05 15 59 01 17 02 15 1E 12 19 11 76)
+MiraiConfigExtractorSORA.java> 00020e6c - 00000001 - 00017cf0 - sV (73 56)
+MiraiConfigExtractorSORA.java> Finished!
+```
