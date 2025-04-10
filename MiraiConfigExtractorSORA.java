@@ -117,7 +117,7 @@ public class MiraiConfigExtractorSORA extends GhidraScript {
 
         for (Address address : referencedConfigAddressList) {
             AddressSize addressMapped = mappedConfigData.get(address);
-            println(address.toString() + " - " + toAddr(address.getOffset() / 8 - configAddress.getOffset() / 8).toString() + " - " + addressMapped.address.toString() + " - " + decode(addressMapped.address, addressMapped.size));
+            println(address.toString() + " - " + toAddr(address.getOffset() / 8 - configAddress.getOffset() / 8).toString() + " - " + addressMapped.address.toString() + " - " + decrypt(addressMapped.address, addressMapped.size));
         }
     }
 
@@ -475,7 +475,7 @@ public class MiraiConfigExtractorSORA extends GhidraScript {
         }
     }
 
-    private String decode(Address address, long size) throws Exception {
+    private String decrypt(Address address, long size) throws Exception {
         int bytesToRead = (int) size;
         byte[] inputBytes = new byte[bytesToRead];
 
