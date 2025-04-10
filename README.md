@@ -540,47 +540,48 @@ Alternatively, you can use the following action: `Function Call Trees` → `Outg
 ```
 MiraiCredentialExtractorSORA.java> Running...
 MiraiCredentialExtractorSORA.java> located decryption function: mw_decrypt
-MiraiCredentialExtractorSORA.java> "$??"P" : ""??$P"
-MiraiCredentialExtractorSORA.java> ""??$P" : "$??"P"
-MiraiCredentialExtractorSORA.java> "$??"P" : "null"
-MiraiCredentialExtractorSORA.java> "$??"P" : ""
-MiraiCredentialExtractorSORA.java> "default" : ""
-MiraiCredentialExtractorSORA.java> "default" : "null"
-MiraiCredentialExtractorSORA.java> "default" : "altslq"
-MiraiCredentialExtractorSORA.java> "default" : "OxhlwSG8"
-MiraiCredentialExtractorSORA.java> "default" : "tlJwpbo6"
-MiraiCredentialExtractorSORA.java> "default" : "S2fGqNFs"
-MiraiCredentialExtractorSORA.java> "root" : "xc3551"
-MiraiCredentialExtractorSORA.java> "root" : "vizxv"
-MiraiCredentialExtractorSORA.java> "root" : "klv123"
-MiraiCredentialExtractorSORA.java> "root" : "admin"
-MiraiCredentialExtractorSORA.java> "root" : "zyad1234"
-MiraiCredentialExtractorSORA.java> "root" : "zlxx."
-MiraiCredentialExtractorSORA.java> "root" : "default"
-MiraiCredentialExtractorSORA.java> "root" : "7ujMko0vizxv"
-MiraiCredentialExtractorSORA.java> "root" : "7ujMko0admin"
-MiraiCredentialExtractorSORA.java> "root" : "hi3518"
-MiraiCredentialExtractorSORA.java> "root" : "cat1029"
-MiraiCredentialExtractorSORA.java> "root" : "annie2012"
-MiraiCredentialExtractorSORA.java> "root" : "changeme"
-MiraiCredentialExtractorSORA.java> "guest" : ""
-MiraiCredentialExtractorSORA.java> "guest" : "null"
-MiraiCredentialExtractorSORA.java> "guest" : "12345z"
-MiraiCredentialExtractorSORA.java> "guest" : "123456"
-MiraiCredentialExtractorSORA.java> "user" : ""
-MiraiCredentialExtractorSORA.java> "user" : "null"
-MiraiCredentialExtractorSORA.java> "user" : "123456"
-MiraiCredentialExtractorSORA.java> "admin" : ""
-MiraiCredentialExtractorSORA.java> "admin" : "null"
-MiraiCredentialExtractorSORA.java> "admin" : "pass"
-MiraiCredentialExtractorSORA.java> "admin" : "password"
-MiraiCredentialExtractorSORA.java> "admin" : "admin1234"
-MiraiCredentialExtractorSORA.java> "support" : "null"
-MiraiCredentialExtractorSORA.java> "mg3500" : "merlin"
-MiraiCredentialExtractorSORA.java> "daemon" : ""
-MiraiCredentialExtractorSORA.java> "ubnt" : "null"
-MiraiCredentialExtractorSORA.java> "adm" : ""
-MiraiCredentialExtractorSORA.java> number of credential pairs: 40
+MiraiCredentialExtractorSORA.java> found 40 credential pairs
+MiraiCredentialExtractorSORA.java> credential pairs (username : password):
+MiraiCredentialExtractorSORA.java> ("$??"P" : ""??$P")
+MiraiCredentialExtractorSORA.java> (""??$P" : "$??"P")
+MiraiCredentialExtractorSORA.java> ("$??"P" : "$??"P")
+MiraiCredentialExtractorSORA.java> ("$??"P" : "")
+MiraiCredentialExtractorSORA.java> ("default" : "")
+MiraiCredentialExtractorSORA.java> ("default" : "default")
+MiraiCredentialExtractorSORA.java> ("default" : "altslq")
+MiraiCredentialExtractorSORA.java> ("default" : "OxhlwSG8")
+MiraiCredentialExtractorSORA.java> ("default" : "tlJwpbo6")
+MiraiCredentialExtractorSORA.java> ("default" : "S2fGqNFs")
+MiraiCredentialExtractorSORA.java> ("root" : "xc3551")
+MiraiCredentialExtractorSORA.java> ("root" : "vizxv")
+MiraiCredentialExtractorSORA.java> ("root" : "klv123")
+MiraiCredentialExtractorSORA.java> ("root" : "admin")
+MiraiCredentialExtractorSORA.java> ("root" : "zyad1234")
+MiraiCredentialExtractorSORA.java> ("root" : "zlxx.")
+MiraiCredentialExtractorSORA.java> ("root" : "default")
+MiraiCredentialExtractorSORA.java> ("root" : "7ujMko0vizxv")
+MiraiCredentialExtractorSORA.java> ("root" : "7ujMko0admin")
+MiraiCredentialExtractorSORA.java> ("root" : "hi3518")
+MiraiCredentialExtractorSORA.java> ("root" : "cat1029")
+MiraiCredentialExtractorSORA.java> ("root" : "annie2012")
+MiraiCredentialExtractorSORA.java> ("root" : "changeme")
+MiraiCredentialExtractorSORA.java> ("guest" : "")
+MiraiCredentialExtractorSORA.java> ("guest" : "guest")
+MiraiCredentialExtractorSORA.java> ("guest" : "12345z")
+MiraiCredentialExtractorSORA.java> ("guest" : "123456")
+MiraiCredentialExtractorSORA.java> ("user" : "")
+MiraiCredentialExtractorSORA.java> ("user" : "user")
+MiraiCredentialExtractorSORA.java> ("user" : "123456")
+MiraiCredentialExtractorSORA.java> ("admin" : "")
+MiraiCredentialExtractorSORA.java> ("admin" : "admin")
+MiraiCredentialExtractorSORA.java> ("admin" : "pass")
+MiraiCredentialExtractorSORA.java> ("admin" : "password")
+MiraiCredentialExtractorSORA.java> ("admin" : "admin1234")
+MiraiCredentialExtractorSORA.java> ("support" : "support")
+MiraiCredentialExtractorSORA.java> ("mg3500" : "merlin")
+MiraiCredentialExtractorSORA.java> ("daemon" : "")
+MiraiCredentialExtractorSORA.java> ("ubnt" : "ubnt")
+MiraiCredentialExtractorSORA.java> ("adm" : "")
 MiraiCredentialExtractorSORA.java> Finished!
 ```
 
