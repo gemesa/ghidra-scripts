@@ -591,7 +591,7 @@ MiraiCredentialExtractorSORA.java> Finished!
 
 <details>
 
-<summary><code>MiraiConfigExtractorSORA.log</code></summary>
+<summary><code>MiraiConfigExtractorSORA.log (key: 0xdedefbaf)</code></summary>
 
 ```
 MiraiConfigExtractorSORA.java> Running...
@@ -683,7 +683,7 @@ MiraiConfigExtractorSORA.java> Finished!
 
 <details>
 
-<summary><code>MiraiConfigExtractorSORA.log</code></summary>
+<summary><code>MiraiConfigExtractorSORA.log (key: 0xdeadbeef)</code></summary>
 
 ```
 MiraiConfigExtractorSORA.java> Running...
