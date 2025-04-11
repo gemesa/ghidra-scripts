@@ -18,7 +18,7 @@ import ghidra.program.model.symbol.Reference;
 import ghidra.program.model.symbol.ReferenceIterator;
 import ghidra.program.model.symbol.ReferenceManager;
 
-public class MiraiCredentialExtractorSORA extends GhidraScript {
+public class MiraiCredentialExtractorSORAArm extends GhidraScript {
 
     Memory memory = null;
     FunctionManager functionManager = null;

@@ -21,7 +21,7 @@ import ghidra.program.model.symbol.Reference;
 import ghidra.program.model.symbol.ReferenceIterator;
 import ghidra.program.model.symbol.ReferenceManager;
 
-public class MiraiConfigExtractorSORA extends GhidraScript {
+public class MiraiConfigExtractorSORAArm extends GhidraScript {
 
     // Encryption key hardcoded into the binary used to decrypt the configuration.
     private static final int ENCRYPTION_KEY = 0xdedefbaf;
