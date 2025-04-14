@@ -101,7 +101,14 @@ public class MiraiCredentialExtractorSORAArm extends GhidraScript {
                 Object[] opObjs0 = instruction.getOpObjects(0);
                 Object opObj0 = opObjs0[0];
                 if (mnemonic.equals("ldr") && opObj0.toString().equals("r0")) {
-                    user = decrypt(instruction);
+                    Object[] opObjs1 = instruction.getOpObjects(1);
+                    Object opObj1 = opObjs1[0];
+                    Address address = toAddr(opObj1.toString());
+                    // deref
+                    int value = memory.getInt(address);
+                    address = toAddr(value);
+
+                    user = decrypt(address);
                 } else if (mnemonic.equals("cpy") && opObj0.toString().equals("r1")) {
                     // Example:
                     /*
@@ -113,7 +120,14 @@ public class MiraiCredentialExtractorSORAArm extends GhidraScript {
                      */
                     sameCreds = true;
                 } else if (mnemonic.equals("ldr") && opObj0.toString().equals("r1")) {
-                    pass = decrypt(instruction);
+                    Object[] opObjs1 = instruction.getOpObjects(1);
+                    Object opObj1 = opObjs1[0];
+                    Address address = toAddr(opObj1.toString());
+                    // deref
+                    int value = memory.getInt(address);
+                    address = toAddr(value);
+
+                    pass = decrypt(address);
                 }
 
                 if (user != null && pass != null) {
@@ -178,14 +192,8 @@ public class MiraiCredentialExtractorSORAArm extends GhidraScript {
         return targetFunction;
     }
 
-    private String decrypt(Instruction instruction) throws Exception {
-        Object[] opObjs1 = instruction.getOpObjects(1);
-        Object opObj1 = opObjs1[0];
+    private String decrypt(Address address) throws Exception {
 
-        Address address = toAddr(opObj1.toString());
-        // deref
-        int value = memory.getInt(address);
-        address = toAddr(value);
         StringBuilder asciiOutput = new StringBuilder();
         int maxBytes = 50;
 
