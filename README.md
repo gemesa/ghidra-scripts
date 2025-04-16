@@ -751,6 +751,8 @@ MiraiConfigExtractorSORAArm.java> 00020e6c - 00000001 - 00017cf0 - sV (73 56)
 MiraiConfigExtractorSORAArm.java> Finished!
 ```
 
+</details>
+
 ## `mirai_config_extractor_sora_arm_qiling.py`
 
 <details>
