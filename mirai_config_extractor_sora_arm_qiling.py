@@ -75,7 +75,7 @@ size = 0
 
 
 def decrypt_enter_hook(ql: Qiling):
-    global offset, size, offsets
+    global offset, size
     offset = ql.arch.regs.r0
     size = ql.unpack16(ql.mem.read(0x20E68 + offset * 8, 2))
     # print(f"offset: 0x{offset:x}")
