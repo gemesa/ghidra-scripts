@@ -6,14 +6,14 @@ import typing
 
 if typing.TYPE_CHECKING:
     from ghidra.ghidra_builtins import *
-
+    from ghidra.program.model.listing import *
 import sys
 import jpype
 
 from typing import List
 
 function_manager = currentProgram.getFunctionManager()
-functions = function_manager.getFunctions(False)
+functions = function_manager.getFunctions(False)  # type: typing.Iterable[Function]
 listing = currentProgram.getListing()
 memory = currentProgram.getMemory()
 ref_manager = currentProgram.getReferenceManager()
@@ -42,6 +42,7 @@ def locate_function_by_pattern(pattern):
         function_body = func.getBody()
         instrs = listing.getInstructions(function_body, True)
 
+        instr: Instruction
         for instr in instrs:
             mnemonic = instr.getMnemonicString()
 
@@ -73,7 +74,7 @@ offset = 0
 size = 0
 
 
-def decrypt_enter_hook(ql):
+def decrypt_enter_hook(ql: Qiling):
     global offset, size, offsets
     offset = ql.arch.regs.r0
     size = ql.unpack16(ql.mem.read(0x20E68 + offset * 8, 2))
@@ -86,7 +87,7 @@ def decrypt_enter_hook(ql):
     print(f"encrypted data ({offset:x}): {data}")
 
 
-def decrypt_leave_hook(ql):
+def decrypt_leave_hook(ql: Qiling):
     data_ptr = ql.unpack32(ql.mem.read(0x20E64 + offset * 8, 4))
     data = ql.mem.read(data_ptr, size)
     print(f"decrypted data ({offset:x}): {data}")
