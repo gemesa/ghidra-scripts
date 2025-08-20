@@ -1085,3 +1085,27 @@ decrypted data (1): bytearray(b'sV')
 mirai_config_extractor_sora_arm_qiling.py> Finished!
 ```
 </details>
+
+## `ExtractGoStringAt.java`
+
+This is a small helper script to quickly extract and print Go strings while going through the disassembly manually. Ghidra does not handle well strings that are not null terminated (e.g. Go and Rust strings). It merges multiple strings into a long concatenated one which is hard to work with. This helper script solves this problem by printing the specified string only. It accepts 2 parameters: an address and a length.
+
+```
+...
+        000f1d60 00 02 9f e5     ldr        r0,[PTR_s_aWw3VyVXIXA2RUZpSTJORSVqWjlyMSFo_000   = 00137bb8
+        000f1d64 08 00 8d e5     str        r0=>s_aWw3VyVXIXA2RUZpSTJORSVqWjlyMSFo_00135a2   = "aWw3VyVXIXA2RUZpSTJORSVqWjlyM
+        000f1d68 2c 00 a0 e3     mov        r0,#0x2c
+        000f1d6c 0c 00 8d e5     str        r0,[sp,#local_4c]
+        000f1d70 55 90 fe eb     bl         encoding/base64.(*Encoding).DecodeString         undefined encoding/base64.(*Enco
+...
+```
+
+In the example above the following values are passed to the script:
+- address: 0x137bb8
+- length: 0x2c
+
+```
+ExtractGoStringAt.java> Running...
+String at 0x137bb8: aWw3VyVXIXA2RUZpSTJORSVqWjlyMSFoTGJDYiRYZnM=
+ExtractGoStringAt.java> Finished!
+```
