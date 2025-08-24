@@ -1109,3 +1109,54 @@ ExtractGoStringAt.java> Running...
 String at 0x137bb8: aWw3VyVXIXA2RUZpSTJORSVqWjlyMSFoTGJDYiRYZnM=
 ExtractGoStringAt.java> Finished!
 ```
+
+# non-ghidra-scripts
+
+Some scripts which are not executed in a Ghidra context but are still closely tied to it.
+
+## `resolve-qemu-addresses.go`
+
+`qemu` can generate log files (e.g. via `qemu-aarch64 -d in_asm -D qemu.log <binary>`). When running a stripped binary, the function names are missing:
+
+```
+$ cat qemu.log
+----------------
+IN: 
+0x0007fbdc:  
+OBJD-T: 00009de504108de204409fe500f084e2
+
+----------------
+IN: 
+0x0007fbf4:  
+OBJD-T: 03002de91470a0e3000000ef
+
+----------------
+IN: 
+0x0007fc00:  
+OBJD-T: 0300bde8e8f5ffea
+...
+```
+After analyzing a Go binary in Ghidra and restoring the symbols with [`GoReSym`](https://github.com/mandiant/GoReSym), the function table can be exported as a CSV file via **Window** --> **Functions** --> right click --> **Export** --> **Export to CSV...**. `resolve-qemu-addresses.go` expects the following CSV headers: name, location (address), function size.
+
+The exported CSV file along with the QEMU log file can be passed to `resolve-qemu-addresses.go` which will resolve the addresses:
+
+```
+$ go run resolve-qemu-addresses.go functions.csv qemu.log
+Output written to qemu-resolved.log 
+$ cat qemu-resolved.log
+----------------
+IN: _rt0_arm_linux (JMP)
+0x0007fbdc:  
+OBJD-T: 00009de504108de204409fe500f084e2
+
+----------------
+IN: _rt0_arm_linux1 (JMP)
+0x0007fbf4:  
+OBJD-T: 03002de91470a0e3000000ef
+
+----------------
+IN: _rt0_arm_linux1
+0x0007fc00:  
+OBJD-T: 0300bde8e8f5ffea
+...
+```
