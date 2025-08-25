@@ -1186,15 +1186,15 @@ Fedora 42:
 $ go run resolve-qemu-addresses.go functions.csv qemu.log
 Output written to qemu-resolved.log 
 ----------------
-IN: runtime.call536870912 - ldr x0,[sp]=>Stack[0x0]
+IN: _rt0_arm64_linux - ldr x0,[sp]=>Stack[0x0] (ENTER)
 0x0007ede0:  f94003e0  ldr      x0, [sp]
 
 ----------------
-IN: runtime.call536870912 - add x1,sp,#0x8
+IN: _rt0_arm64_linux - add x1,sp,#0x8
 0x0007ede4:  910023e1  add      x1, sp, #8
 
 ----------------
-IN: runtime.call536870912 - bl main
+IN: _rt0_arm64_linux - bl main
 0x0007ede8:  94000002  bl       #0x7edf0
 ...
 ```
