@@ -1116,47 +1116,85 @@ Some scripts which are not executed in a Ghidra context but are still closely ti
 
 ## `resolve-qemu-addresses.go`
 
-`qemu` can generate log files (e.g. via `qemu-aarch64 -d in_asm -D qemu.log <binary>`). When running a stripped binary, the function names are missing:
+`qemu` can generate log files (e.g. via `qemu-aarch64 -d in_asm -D qemu.log -one-insn-per-tb <binary>`). When running a stripped binary, the function names are missing. In case of some `qemu` versions (Ubuntu 24.04), the instructions might be also missing:
 
 ```
 $ cat qemu.log
 ----------------
 IN: 
-0x0007fbdc:  
-OBJD-T: 00009de504108de204409fe500f084e2
+0x000746a0:  
+OBJD-T: e00340f9
 
 ----------------
 IN: 
-0x0007fbf4:  
-OBJD-T: 03002de91470a0e3000000ef
+0x000746a4:  
+OBJD-T: e1230091
 
 ----------------
 IN: 
-0x0007fc00:  
-OBJD-T: 0300bde8e8f5ffea
+0x000746a8:  
+OBJD-T: 02000094
 ...
 ```
-After analyzing a binary (e.g. Go) in Ghidra and restoring the symbols (e.g. with [`GoReSym`](https://github.com/mandiant/GoReSym)), the function table can be exported as a CSV file via **Window** --> **Functions** --> right click --> **Export** --> **Export to CSV...**. `resolve-qemu-addresses.go` expects the following CSV headers: name, location (address), function size.
+While with other versions they might be present (Fedora 42):
 
-The exported CSV file along with the QEMU log file can be passed to `resolve-qemu-addresses.go` which will resolve the addresses:
+```
+$ cat qemu.log
+----------------
+IN: 
+0x0007ede0:  f94003e0  ldr      x0, [sp]
+
+----------------
+IN: 
+0x0007ede4:  910023e1  add      x1, sp, #8
+
+----------------
+IN: 
+0x0007ede8:  94000002  bl       #0x7edf0
+...
+```
+
+After analyzing a binary (e.g. Go) in Ghidra and restoring the symbols (e.g. with [`GoReSym`](https://github.com/mandiant/GoReSym)), the function table can be exported as a CSV file via **Window** --> **Functions** --> right click --> **Export** --> **Export to CSV...**. `resolve-qemu-addresses.go` expects the following CSV headers: name, location (address), function size. Additionally, the disassembly (listing view) can be exported as well: **File** --> **Export Program...** --> **Format: Ascii** --> **OK**.
+
+The exported CSV and listing files along with the QEMU log file can be passed to `resolve-qemu-addresses.go` which will resolve the symbols and instructions for each address.
+
+Ubuntu 24.04:
 
 ```
 $ go run resolve-qemu-addresses.go functions.csv qemu.log
 Output written to qemu-resolved.log 
 $ cat qemu-resolved.log
 ----------------
-IN: _rt0_arm_linux (JMP)
-0x0007fbdc:  
-OBJD-T: 00009de504108de204409fe500f084e2
+IN: _rt0_arm64_linux - ldr x0,[sp]=>Stack[0x0] (ENTER)
+0x000746a0:  
+OBJD-T: e00340f9
 
 ----------------
-IN: _rt0_arm_linux1 (JMP)
-0x0007fbf4:  
-OBJD-T: 03002de91470a0e3000000ef
+IN: _rt0_arm64_linux - add x1,sp,#0x8
+0x000746a4:  
+OBJD-T: e1230091
 
 ----------------
-IN: _rt0_arm_linux1
-0x0007fc00:  
-OBJD-T: 0300bde8e8f5ffea
+IN: _rt0_arm64_linux - bl main
+0x000746a8:  
+OBJD-T: 02000094
+...
+```
+Fedora 42:
+
+```
+$ go run resolve-qemu-addresses.go functions.csv qemu.log
+Output written to qemu-resolved.log 
+----------------
+IN: runtime.call536870912 - ldr x0,[sp]=>Stack[0x0]
+0x0007ede0:  f94003e0  ldr      x0, [sp]
+
+----------------
+IN: runtime.call536870912 - add x1,sp,#0x8
+0x0007ede4:  910023e1  add      x1, sp, #8
+
+----------------
+IN: runtime.call536870912 - bl main
+0x0007ede8:  94000002  bl       #0x7edf0
 ...
 ```

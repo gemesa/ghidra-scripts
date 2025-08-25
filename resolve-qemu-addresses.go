@@ -5,6 +5,7 @@ import (
 	"encoding/csv"
 	"fmt"
 	"os"
+	"regexp"
 	"strconv"
 	"strings"
 )
@@ -14,13 +15,56 @@ type FunctionInfo struct {
 	Size uint64
 }
 
+type InstrInfo struct {
+	Mnemonic string
+	Operand  string
+}
+
 func main() {
-	if len(os.Args) != 3 {
-		fmt.Printf("Usage: %s <functions.csv> <qemu.log>\n", os.Args[0])
+	if len(os.Args) != 4 {
+		fmt.Printf("Usage: %s <functions.csv> <qemu.log> <listing.txt>\n", os.Args[0])
 		os.Exit(1)
 	}
 	functions := loadFunctions(os.Args[1])
-	processQemuLog(os.Args[2], functions)
+	instrs := loadInstructions(os.Args[3])
+	processQemuLog(os.Args[2], functions, instrs)
+}
+
+func loadInstructions(file string) map[uint64]InstrInfo {
+	f, err := os.Open(file)
+	check(err)
+	defer f.Close()
+
+	scanner := bufio.NewScanner(f)
+	//var lines []string
+	/*
+									;undefined main.main()
+				;local_10      undefined8         -10                      ;XREF[1,0]:   000910d0
+				;local_18      undefined8         -18                      ;XREF[2,0]:   000910b8,000910c4
+				;local_50      undefined8         -50                      ;XREF[2,0]:   000910ac,000910f4
+				;local_58      undefined8         -58                      ;XREF[2,0]:   000910b0,000910f4
+																;XREF[3,0]:   00045678,00091108,000c2288
+		.text:000910a0  900b40f9        ldr         x16,[x28, #0x10]
+		.text:000910a4  ff6330eb        cmp         sp,x16
+		.text:000910a8  c9020054        b.ls        LAB_00091100
+	*/
+	re := regexp.MustCompile(`\.text:(\w+)\s+\w+\s+([a-zA-Z0-9.]+)\s+([^;]*)`)
+	instrs := make(map[uint64]InstrInfo)
+	for scanner.Scan() {
+		// lines = append(lines, scanner.Text())
+		line := scanner.Text()
+		matches := re.FindStringSubmatch(line)
+		if matches != nil {
+			addressStr := matches[1]
+			mnemonic := matches[2]
+			operand := matches[3]
+			operand = strings.TrimSpace(operand)
+			InstrInfo := InstrInfo{mnemonic, operand}
+			address, _ := strconv.ParseUint(addressStr, 16, 64)
+			instrs[address] = InstrInfo
+		}
+	}
+	return instrs
 }
 
 func findFunction(address uint64, functions map[uint64]FunctionInfo) (string, uint64) {
@@ -32,7 +76,7 @@ func findFunction(address uint64, functions map[uint64]FunctionInfo) (string, ui
 	return "", 0
 }
 
-func processQemuLog(logFile string, functions map[uint64]FunctionInfo) {
+func processQemuLog(logFile string, functions map[uint64]FunctionInfo, instrs map[uint64]InstrInfo) {
 	outFile := strings.Split(logFile, ".")[0] + "-resolved." + strings.Split(logFile, ".")[1]
 
 	inF, err := os.Open(logFile)
@@ -55,10 +99,15 @@ func processQemuLog(logFile string, functions map[uint64]FunctionInfo) {
 					address, _ := strconv.ParseUint(addressStr, 0, 64)
 					function, functionAddress := findFunction(address, functions)
 					if function != "" {
+						instrInfo := instrs[address]
 						if address == functionAddress {
-							fmt.Fprintf(outF, "IN: %v (JMP)\n", function)
+							fmt.Fprintf(outF, "IN: %v - %v %v (ENTER)\n", function, instrInfo.Mnemonic, instrInfo.Operand)
 						} else {
-							fmt.Fprintf(outF, "IN: %v\n", function)
+							if instrInfo.Mnemonic == "ret" {
+								fmt.Fprintf(outF, "IN: %v - %v %v (LEAVE)\n", function, instrInfo.Mnemonic, instrInfo.Operand)
+							} else {
+								fmt.Fprintf(outF, "IN: %v - %v %v\n", function, instrInfo.Mnemonic, instrInfo.Operand)
+							}
 						}
 					} else {
 						fmt.Fprintln(outF, "IN:")
