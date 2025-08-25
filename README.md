@@ -1161,7 +1161,7 @@ The exported CSV and listing files along with the QEMU log file can be passed to
 Ubuntu 24.04:
 
 ```
-$ go run resolve-qemu-addresses.go functions.csv qemu.log
+$ go run resolve-qemu-addresses.go functions.csv qemu.log listing.txt
 Output written to qemu-resolved.log 
 $ cat qemu-resolved.log
 ----------------
@@ -1183,7 +1183,7 @@ OBJD-T: 02000094
 Fedora 42:
 
 ```
-$ go run resolve-qemu-addresses.go functions.csv qemu.log
+$ go run resolve-qemu-addresses.go functions.csv qemu.log listing.txt
 Output written to qemu-resolved.log 
 ----------------
 IN: _rt0_arm64_linux - ldr x0,[sp]=>Stack[0x0] (ENTER)
