@@ -78,7 +78,7 @@ func processQemuLog(logFile string, functions map[uint64]FunctionInfo) {
 		check(err)
 	}
 
-	fmt.Printf("Output written to %v", outFile)
+	fmt.Printf("Output written to %v\n", outFile)
 }
 
 func loadFunctions(file string) map[uint64]FunctionInfo {
