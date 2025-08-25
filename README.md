@@ -1136,7 +1136,7 @@ IN:
 OBJD-T: 0300bde8e8f5ffea
 ...
 ```
-After analyzing a Go binary in Ghidra and restoring the symbols with [`GoReSym`](https://github.com/mandiant/GoReSym), the function table can be exported as a CSV file via **Window** --> **Functions** --> right click --> **Export** --> **Export to CSV...**. `resolve-qemu-addresses.go` expects the following CSV headers: name, location (address), function size.
+After analyzing a binary (e.g. Go) in Ghidra and restoring the symbols (e.g. with [`GoReSym`](https://github.com/mandiant/GoReSym)), the function table can be exported as a CSV file via **Window** --> **Functions** --> right click --> **Export** --> **Export to CSV...**. `resolve-qemu-addresses.go` expects the following CSV headers: name, location (address), function size.
 
 The exported CSV file along with the QEMU log file can be passed to `resolve-qemu-addresses.go` which will resolve the addresses:
 
